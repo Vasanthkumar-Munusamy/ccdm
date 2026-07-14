@@ -4,63 +4,61 @@ import { useState } from "react";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
 
   const totalSteps = 11;
 
   const handleNext = () => {
     // Validate current step
-    let isValid = false;
+    let errorMessage: string | null = null;
     
     switch (currentStep) {
       case 1:
-        if (answers.q1) {
-          if (answers.q1 === "Acceptable" && !answers.q1_reason) {
-            isValid = false; // Need reason if acceptable
-          } else {
-            isValid = true;
-          }
+        if (!answers.q1) {
+          errorMessage = "Please complete all required fields!";
+        } else if (answers.q1 === "Acceptable" && !answers.q1_reason) {
+          errorMessage = "You must tell the reason for accepting it";
         }
         break;
       case 2:
-        if (answers.q2) isValid = true;
+        if (!answers.q2) errorMessage = "Please complete all required fields!";
         break;
       case 3:
-        if (answers.q3) isValid = true;
+        if (!answers.q3) errorMessage = "Please complete all required fields!";
         break;
       case 4:
-        if (answers.q4) isValid = true;
+        if (!answers.q4) errorMessage = "Please complete all required fields!";
         break;
       case 5:
-        if (answers.q5) isValid = true;
+        if (!answers.q5) errorMessage = "Please complete all required fields!";
         break;
       case 6:
-        if (answers.q6) isValid = true;
+        if (!answers.q6) errorMessage = "Please complete all required fields!";
         break;
       case 7:
-        if (answers.q7) isValid = true;
+        if (!answers.q7) errorMessage = "Please complete all required fields!";
         break;
       case 8:
-        if (answers.q8) isValid = true;
+        if (!answers.q8) errorMessage = "Please complete all required fields!";
         break;
       case 9:
-        isValid = true; // Just a link
+        // Just a link
         break;
       case 10:
-        isValid = true; // Just a request
+        // Just a request
         break;
       case 11:
-        isValid = true; // Optional address
+        // Optional address
         break;
     }
 
-    if (!isValid) {
-      setError(true);
+    if (errorMessage) {
+      setError(errorMessage);
       return;
     }
 
-    setError(false);
+    setError(null);
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -72,7 +70,7 @@ export default function Home() {
   };
 
   const handlePrevious = () => {
-    setError(false);
+    setError(null);
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
@@ -80,7 +78,7 @@ export default function Home() {
 
   const updateAnswer = (key: string, value: any) => {
     setAnswers({ ...answers, [key]: value });
-    setError(false); // Clear error on change
+    setError(null); // Clear error on change
   };
 
   return (
@@ -101,8 +99,8 @@ export default function Home() {
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-[#fee2e2] text-[#b91c1c] border border-[#fca5a5] rounded flex items-center justify-between">
-            <span>Please complete all required fields!</span>
-            <span className="font-bold cursor-pointer text-xl" onClick={() => setError(false)}>&times;</span>
+            <span>{error}</span>
+            <span className="font-bold cursor-pointer text-xl" onClick={() => setError(null)}>&times;</span>
           </div>
         )}
 
