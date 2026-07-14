@@ -84,7 +84,18 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "#faf0f4" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 pt-8" style={{ backgroundColor: "#faf0f4" }}>
+      
+      {/* Headings */}
+      <div className="text-center mb-8 w-full max-w-3xl">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-[#d81b60] tracking-wider uppercase">
+          NIMMATHI.COM
+        </h1>
+        <h2 className="text-xl md:text-2xl font-bold text-[#d81b60]">
+          Christian Caste Disclaimers Movement (CCDM)
+        </h2>
+      </div>
+
       <div className="w-full max-w-3xl bg-[#fdf2f8] shadow-sm p-6 md:p-10 rounded-sm text-slate-800" style={{ border: "1px solid #fce7f3" }}>
         
         {/* Error Message */}
