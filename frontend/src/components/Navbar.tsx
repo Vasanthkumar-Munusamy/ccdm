@@ -12,13 +12,13 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#d81b60] to-[#c2185b] text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center h-12 items-center space-x-6 text-sm font-medium">
-          
+
           <Link href="/" className="hover:text-pink-200 transition-colors">
             Home
           </Link>
-          
+
           {/* Gallery Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center"
             onMouseEnter={() => setGalleryOpen(true)}
             onMouseLeave={() => setGalleryOpen(false)}
@@ -28,14 +28,15 @@ export default function Navbar() {
             </button>
             {galleryOpen && (
               <div className="absolute top-12 left-0 mt-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
-                <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Photos</Link>
+                <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Pictures</Link>
+                <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Audios</Link>
                 <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Videos</Link>
               </div>
             )}
           </div>
 
           {/* Q&A Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center"
             onMouseEnter={() => setQaOpen(true)}
             onMouseLeave={() => setQaOpen(false)}
@@ -46,17 +47,17 @@ export default function Navbar() {
             {qaOpen && (
               <div className="absolute top-12 left-0 mt-0 w-56 bg-[#c2185b] rounded-b shadow-lg py-2">
                 <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white whitespace-nowrap">
-                  Caste Denial Q & A
+                  Common Questions
                 </Link>
                 <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white whitespace-nowrap">
-                  An Interview with you
+                  Caste Denial Q & A
                 </Link>
               </div>
             )}
           </div>
 
           {/* Services Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center"
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
@@ -66,6 +67,7 @@ export default function Navbar() {
             </button>
             {servicesOpen && (
               <div className="absolute top-12 left-0 mt-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
+                <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Blood Bank</Link>
                 <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Matrimony</Link>
               </div>
             )}
@@ -74,15 +76,15 @@ export default function Navbar() {
           <Link href="#" className="hover:text-pink-200 transition-colors">
             Support us
           </Link>
-          
+
           <Link href="#" className="hover:text-pink-200 transition-colors">
             Contact us
           </Link>
-          
+
           <Link href="#" className="hover:text-pink-200 transition-colors">
             Articles
           </Link>
-          
+
           <Link href="#" className="hover:text-pink-200 transition-colors">
             Kindle-Version-Books
           </Link>
