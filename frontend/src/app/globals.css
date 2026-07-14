@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-noto-sans);
 }
 
 :root {
@@ -20,7 +19,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-noto-sans), var(--font-noto-sans-tamil), Arial, Helvetica, sans-serif;
 }
 
 /* Glassmorphism utilities */
@@ -34,4 +33,51 @@ body {
 .dark .glass {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Google Translate Widget Overrides */
+.goog-te-gadget {
+  font-family: inherit !important;
+  color: transparent !important;
+  white-space: nowrap;
+}
+
+.goog-te-gadget .goog-te-combo {
+  color: #333 !important;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit !important;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  background-color: white;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.goog-te-gadget .goog-te-combo:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.goog-te-gadget .goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget img {
+  display: none !important;
+}
+
+.goog-te-gadget span {
+  display: none !important;
+}
+
+/* Hide the top translation banner that Google injects */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
 }
