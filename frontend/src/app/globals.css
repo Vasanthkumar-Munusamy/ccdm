@@ -22,15 +22,15 @@ body {
   font-family: var(--font-noto-sans), var(--font-noto-sans-tamil), Arial, Helvetica, sans-serif;
 }
 
-/* Ensure Tamil font is always bold */
-html[lang="ta"] body,
-html[lang="ta"] p,
-html[lang="ta"] h1,
-html[lang="ta"] h2,
-html[lang="ta"] h3,
-html[lang="ta"] span,
-html[lang="ta"] div {
-  font-weight: 700 !important;
+/* Improve Tamil font visibility */
+html[lang="ta"] {
+  font-size: 115% !important;
+}
+
+html[lang="ta"] body {
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  line-height: 1.8;
 }
 
 /* Glassmorphism utilities */
