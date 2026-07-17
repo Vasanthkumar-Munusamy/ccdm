@@ -84,11 +84,3 @@ html[lang="ta"] body {
   display: none !important;
 }
 
-/* Hide the top translation banner that Google injects */
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-}

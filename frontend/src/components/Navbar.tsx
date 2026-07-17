@@ -1,15 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const [qaOpen, setQaOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [hasTranslateBanner, setHasTranslateBanner] = useState(false);
+
+  // Fix for Google Translate leaving an empty space at the top when the popup is closed.
+  // This periodically checks if the banner is hidden and resets the html/body top style.
+  // It also updates our state so the Navbar can adjust its sticky top position!
+  useEffect(() => {
+    const fixGoogleTranslateGap = setInterval(() => {
+      // Google Translate adds 'translated-ltr' or 'translated-rtl' to the html tag when active
+      const isTranslated = document.documentElement.classList.contains('translated-ltr') || 
+                           document.documentElement.classList.contains('translated-rtl');
+      
+      // We can also check for the banner iframe just in case
+      const banner = document.querySelector('.goog-te-banner-frame, .skiptranslate > iframe') as HTMLElement;
+      const isBannerVisible = banner && window.getComputedStyle(banner).display !== 'none' && banner.offsetHeight > 0;
+      
+      const isActive = isTranslated || !!isBannerVisible;
+      setHasTranslateBanner(isActive);
+
+      if (!isActive) {
+        if (document.documentElement.style.top) {
+          document.documentElement.style.top = '';
+        }
+        if (document.body.style.top) {
+          document.body.style.top = '';
+        }
+      }
+    }, 300);
+
+    return () => clearInterval(fixGoogleTranslateGap);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#d81b60] to-[#c2185b] text-white shadow-md">
+    <nav 
+      className="sticky w-full z-50 bg-gradient-to-r from-[#d81b60] to-[#c2185b] text-white shadow-md transition-all duration-300"
+      style={{ top: hasTranslateBanner ? '40px' : '0px' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center h-12 items-center space-x-6 text-sm font-medium">
 

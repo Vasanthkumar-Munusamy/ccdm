@@ -6,13 +6,13 @@ import Navbar from "@/components/Navbar";
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const notoSansTamil = Noto_Sans_Tamil({
   variable: "--font-noto-sans-tamil",
   subsets: ["tamil"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default function RootLayout({
       lang="en"
       className={`${notoSans.variable} ${notoSansTamil.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col pt-12">
+      <body className="min-h-full flex flex-col">
         <Navbar />
         {children}
       </body>
