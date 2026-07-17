@@ -90,6 +90,87 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Survey saved successfully", "id": survey.ID})
 	})
 
+	// Admin Login endpoint (Simple Hardcoded for now)
+	r.POST("/api/admin/login", func(c *gin.Context) {
+		var req struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if req.Username == "admin" && req.Password == "admin123" {
+			c.JSON(http.StatusOK, gin.H{"message": "Login successful", "token": "dummy-admin-token"})
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		}
+	})
+
+	// Caste Denial QA Endpoints
+	r.GET("/api/qa", func(c *gin.Context) {
+		var qas []models.CasteDenialQA
+		if err := db.DB.Find(&qas).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch QAs"})
+			return
+		}
+		c.JSON(http.StatusOK, qas)
+	})
+
+	r.GET("/api/qa/:id", func(c *gin.Context) {
+		var qa models.CasteDenialQA
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "QA not found"})
+			return
+		}
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.POST("/api/qa", func(c *gin.Context) {
+		var req struct {
+			Question string `json:"question"`
+			Answer   string `json:"answer"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		qa := models.CasteDenialQA{Question: req.Question, Answer: req.Answer}
+		if err := db.DB.Create(&qa).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create QA"})
+			return
+		}
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.PUT("/api/qa/:id", func(c *gin.Context) {
+		var qa models.CasteDenialQA
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "QA not found"})
+			return
+		}
+		var req struct {
+			Question string `json:"question"`
+			Answer   string `json:"answer"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		qa.Question = req.Question
+		qa.Answer = req.Answer
+		db.DB.Save(&qa)
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.DELETE("/api/qa/:id", func(c *gin.Context) {
+		if err := db.DB.Delete(&models.CasteDenialQA{}, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete QA"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
+	})
+
 	// Start the server
 	log.Println("Server is starting on port 8080...")
 	if err := r.Run(":8080"); err != nil {

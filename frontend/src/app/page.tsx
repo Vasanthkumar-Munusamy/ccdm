@@ -22,19 +22,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    (window as any).googleTranslateElementInit = () => {
-      if ((window as any).google && (window as any).google.translate) {
-        new (window as any).google.translate.TranslateElement(
-          {
-            pageLanguage: 'en',
-            includedLanguages: 'en,ta,ml,kn,te,hi'
-          },
-          'google_translate_element'
-        );
-      }
-    };
-  }, []);
+
 
   const totalSteps = 11;
 
@@ -143,10 +131,6 @@ export default function Home() {
 
   return (
     <>
-      <Script
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-        strategy="lazyOnload"
-      />
       <div className="min-h-screen flex flex-col items-center justify-center p-4 pt-24 md:pt-32" style={{ backgroundColor: "#faf0f4" }}>
 
         {/* Headings */}
@@ -172,7 +156,6 @@ export default function Home() {
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
               <h2 className="text-xl font-bold md:mb-0">Question No. <span>{currentStep}</span></h2>
-              <div id="google_translate_element" className="min-h-[30px] w-full md:w-auto"></div>
             </div>
 
             {/* Question 1 */}
