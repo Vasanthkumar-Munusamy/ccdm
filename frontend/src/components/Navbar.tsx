@@ -17,7 +17,7 @@ export default function Navbar() {
       if ((window as any).google && (window as any).google.translate) {
         new (window as any).google.translate.TranslateElement(
           {
-            pageLanguage: 'en',
+            pageLanguage: 'ta',
             includedLanguages: 'en,ta,ml,kn,te,hi'
           },
           'google_translate_element'
@@ -79,7 +79,7 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
+            <div className="hidden md:flex items-center space-x-6 text-sm font-medium h-full">
               <Link href="/" className="hover:text-pink-200 transition-colors">Home</Link>
 
               {/* Gallery Dropdown */}
@@ -88,7 +88,7 @@ export default function Navbar() {
                   Gallery <span className="ml-1 text-[10px]">▼</span>
                 </button>
                 {galleryOpen && (
-                  <div className="absolute top-10 left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
+                  <div className="absolute top-full left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Pictures</Link>
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Audios</Link>
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Videos</Link>
@@ -102,8 +102,8 @@ export default function Navbar() {
                   Questions & Answers <span className="ml-1 text-[10px]">▼</span>
                 </button>
                 {qaOpen && (
-                  <div className="absolute top-10 left-0 w-56 bg-[#c2185b] rounded-b shadow-lg py-2">
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white whitespace-nowrap">Common Questions</Link>
+                  <div className="absolute top-full left-0 w-56 bg-[#c2185b] rounded-b shadow-lg py-2">
+                    <Link href="/common-qa" className="block px-4 py-2 hover:bg-[#ad1457] text-white whitespace-nowrap">Common Questions</Link>
                     <Link href="/caste-denial-qa" className="block px-4 py-2 hover:bg-[#ad1457] text-white whitespace-nowrap">Caste Denial Q & A</Link>
                   </div>
                 )}
@@ -115,7 +115,7 @@ export default function Navbar() {
                   Services <span className="ml-1 text-[10px]">▼</span>
                 </button>
                 {servicesOpen && (
-                  <div className="absolute top-10 left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
+                  <div className="absolute top-full left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Blood Bank</Link>
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Matrimony</Link>
                   </div>

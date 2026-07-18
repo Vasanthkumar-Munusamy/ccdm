@@ -126,6 +126,77 @@ func main() {
 		c.JSON(http.StatusOK, qa)
 	})
 
+	r.GET("/api/qa/:id/comments", func(c *gin.Context) {
+		var comments []models.QAComment
+		if err := db.DB.Where("caste_denial_qa_id = ?", c.Param("id")).Order("created_at desc").Find(&comments).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
+			return
+		}
+		c.JSON(http.StatusOK, comments)
+	})
+
+	r.POST("/api/qa/:id/comments", func(c *gin.Context) {
+		var req struct {
+			AuthorName string `json:"author_name"`
+			Content    string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		
+		var qa models.CasteDenialQA
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "QA not found"})
+			return
+		}
+
+		comment := models.QAComment{
+			CasteDenialQAID: qa.ID,
+			AuthorName:      req.AuthorName,
+			Content:         req.Content,
+		}
+
+		if err := db.DB.Create(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, comment)
+	})
+
+	r.PUT("/api/qa/:id/comments/:commentId", func(c *gin.Context) {
+		var req struct {
+			Content string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var comment models.QAComment
+		if err := db.DB.Where("id = ? AND caste_denial_qa_id = ?", c.Param("commentId"), c.Param("id")).First(&comment).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+			return
+		}
+
+		comment.Content = req.Content
+		if err := db.DB.Save(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update comment"})
+			return
+		}
+
+		c.JSON(http.StatusOK, comment)
+	})
+
+	r.DELETE("/api/qa/:id/comments/:commentId", func(c *gin.Context) {
+		if err := db.DB.Where("id = ? AND caste_denial_qa_id = ?", c.Param("commentId"), c.Param("id")).Delete(&models.QAComment{}).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete comment"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Comment deleted successfully"})
+	})
+
 	r.POST("/api/qa", func(c *gin.Context) {
 		var req struct {
 			Question string `json:"question"`
@@ -165,6 +236,141 @@ func main() {
 
 	r.DELETE("/api/qa/:id", func(c *gin.Context) {
 		if err := db.DB.Delete(&models.CasteDenialQA{}, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete QA"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
+	})
+
+	// Common Questions Endpoints
+	r.GET("/api/common-qa", func(c *gin.Context) {
+		var qas []models.CommonQuestion
+		if err := db.DB.Find(&qas).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch Common QAs"})
+			return
+		}
+		c.JSON(http.StatusOK, qas)
+	})
+
+	r.GET("/api/common-qa/:id", func(c *gin.Context) {
+		var qa models.CommonQuestion
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Common QA not found"})
+			return
+		}
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.GET("/api/common-qa/:id/comments", func(c *gin.Context) {
+		var comments []models.CommonQuestionComment
+		if err := db.DB.Where("common_question_id = ?", c.Param("id")).Order("created_at desc").Find(&comments).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
+			return
+		}
+		c.JSON(http.StatusOK, comments)
+	})
+
+	r.POST("/api/common-qa/:id/comments", func(c *gin.Context) {
+		var req struct {
+			AuthorName string `json:"author_name"`
+			Content    string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		
+		var qa models.CommonQuestion
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Common QA not found"})
+			return
+		}
+
+		comment := models.CommonQuestionComment{
+			CommonQuestionID: qa.ID,
+			AuthorName:       req.AuthorName,
+			Content:          req.Content,
+		}
+
+		if err := db.DB.Create(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, comment)
+	})
+
+	r.PUT("/api/common-qa/:id/comments/:commentId", func(c *gin.Context) {
+		var req struct {
+			Content string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var comment models.CommonQuestionComment
+		if err := db.DB.Where("id = ? AND common_question_id = ?", c.Param("commentId"), c.Param("id")).First(&comment).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+			return
+		}
+
+		comment.Content = req.Content
+		if err := db.DB.Save(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update comment"})
+			return
+		}
+
+		c.JSON(http.StatusOK, comment)
+	})
+
+	r.DELETE("/api/common-qa/:id/comments/:commentId", func(c *gin.Context) {
+		if err := db.DB.Where("id = ? AND common_question_id = ?", c.Param("commentId"), c.Param("id")).Delete(&models.CommonQuestionComment{}).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete comment"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Comment deleted successfully"})
+	})
+
+	r.POST("/api/common-qa", func(c *gin.Context) {
+		var req struct {
+			Question string `json:"question"`
+			Answer   string `json:"answer"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		qa := models.CommonQuestion{Question: req.Question, Answer: req.Answer}
+		if err := db.DB.Create(&qa).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create QA"})
+			return
+		}
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.PUT("/api/common-qa/:id", func(c *gin.Context) {
+		var qa models.CommonQuestion
+		if err := db.DB.First(&qa, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Common QA not found"})
+			return
+		}
+		var req struct {
+			Question string `json:"question"`
+			Answer   string `json:"answer"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		qa.Question = req.Question
+		qa.Answer = req.Answer
+		db.DB.Save(&qa)
+		c.JSON(http.StatusOK, qa)
+	})
+
+	r.DELETE("/api/common-qa/:id", func(c *gin.Context) {
+		if err := db.DB.Delete(&models.CommonQuestion{}, c.Param("id")).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete QA"})
 			return
 		}

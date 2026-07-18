@@ -42,7 +42,10 @@ export default function AdminDashboard() {
             <h3 className="text-lg font-bold text-[#c2185b] mb-2">Caste Denial Q & A</h3>
             <p className="text-slate-600 text-sm">Manage questions and answers shown on the public website.</p>
           </Link>
-          {/* Add more dashboard cards here in the future */}
+          <Link href="/admin/common-qa" className="block bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow border border-slate-200">
+            <h3 className="text-lg font-bold text-[#c2185b] mb-2">Common Questions</h3>
+            <p className="text-slate-600 text-sm">Manage common questions shown on the public website.</p>
+          </Link>
         </div>
       </main>
     </div>

@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-type QA = {
+type CommonQA = {
   id: number;
   question: string;
   answer: string;
 };
 
-export default function QAManager() {
+export default function CommonQAManager() {
   const router = useRouter();
-  const [qas, setQas] = useState<QA[]>([]);
+  const [qas, setQas] = useState<CommonQA[]>([]);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -31,13 +31,13 @@ export default function QAManager() {
 
   const fetchQAs = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/qa");
+      const res = await fetch("http://localhost:8080/api/common-qa");
       if (res.ok) {
         const data = await res.json();
         setQas(data);
       }
     } catch (err) {
-      console.error("Failed to fetch QAs", err);
+      console.error("Failed to fetch Common QAs", err);
     }
   };
 
@@ -46,8 +46,8 @@ export default function QAManager() {
     setLoading(true);
     
     const url = editingId 
-      ? `http://localhost:8080/api/qa/${editingId}`
-      : "http://localhost:8080/api/qa";
+      ? `http://localhost:8080/api/common-qa/${editingId}`
+      : "http://localhost:8080/api/common-qa";
       
     const method = editingId ? "PUT" : "POST";
 
@@ -64,16 +64,16 @@ export default function QAManager() {
         setEditingId(null);
         fetchQAs();
       } else {
-        alert("Failed to save QA");
+        alert("Failed to save Common QA");
       }
     } catch (err) {
-      console.error("Failed to save QA", err);
+      console.error("Failed to save Common QA", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (qa: QA) => {
+  const handleEdit = (qa: CommonQA) => {
     setQuestion(qa.question);
     setAnswer(qa.answer);
     setEditingId(qa.id);
@@ -86,14 +86,14 @@ export default function QAManager() {
     if (!confirm("Are you sure you want to delete this question?")) return;
     
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}`, {
+      const res = await fetch(`http://localhost:8080/api/common-qa/${id}`, {
         method: "DELETE"
       });
       if (res.ok) {
         fetchQAs();
       }
     } catch (err) {
-      console.error("Failed to delete QA", err);
+      console.error("Failed to delete Common QA", err);
     }
   };
 
@@ -104,7 +104,7 @@ export default function QAManager() {
       <header className="bg-[#c2185b] text-white p-4 shadow-md flex justify-between items-center">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <Link href="/admin/dashboard" className="text-white hover:text-pink-200 w-fit">← Back</Link>
-          <h1 className="text-lg sm:text-xl font-bold">Manage Caste Denial Q&A</h1>
+          <h1 className="text-lg sm:text-xl font-bold">Manage Common Questions</h1>
         </div>
       </header>
       
@@ -114,7 +114,7 @@ export default function QAManager() {
         <div className="w-full md:w-1/3">
           <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-slate-200">
             <h2 className="text-lg md:text-xl font-bold text-slate-800 mb-4">
-              {editingId ? "Edit Q&A" : "Add New Q&A"}
+              {editingId ? "Edit Common Q&A" : "Add New Common Q&A"}
             </h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>

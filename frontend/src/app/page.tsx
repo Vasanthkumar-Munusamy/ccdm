@@ -135,7 +135,7 @@ export default function Home() {
 
         {/* Headings */}
         <div className="text-center mb-8 w-full max-w-3xl notranslate">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-[#d81b60] tracking-wider uppercase">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 text-[#d81b60] tracking-wider uppercase break-words px-2">
             NIMMATHI.COM
           </h1>
           <h2 className="text-xl md:text-2xl font-bold text-[#d81b60]">

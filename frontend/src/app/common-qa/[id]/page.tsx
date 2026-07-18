@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
-type QA = {
+type CommonQA = {
   id: number;
   question: string;
   answer: string;
@@ -17,14 +17,14 @@ type Comment = {
   created_at: string;
 };
 
-export default function CasteDenialQAAnswer() {
+export default function CommonQAAnswer() {
   const { id } = useParams();
   const router = useRouter();
-  const [qa, setQa] = useState<QA | null>(null);
+  const [qa, setQa] = useState<CommonQA | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [nextQa, setNextQa] = useState<QA | null>(null);
+  const [nextQa, setNextQa] = useState<CommonQA | null>(null);
 
   const [newCommentName, setNewCommentName] = useState("");
   const [newCommentContent, setNewCommentContent] = useState("");
@@ -42,9 +42,9 @@ export default function CasteDenialQAAnswer() {
     const fetchQAData = async () => {
       try {
         const [qaRes, commentsRes, allQasRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/qa/${id}`),
-          fetch(`http://localhost:8080/api/qa/${id}/comments`),
-          fetch(`http://localhost:8080/api/qa`)
+          fetch(`http://localhost:8080/api/common-qa/${id}`),
+          fetch(`http://localhost:8080/api/common-qa/${id}/comments`),
+          fetch(`http://localhost:8080/api/common-qa`)
         ]);
 
         if (qaRes.ok) {
@@ -60,14 +60,14 @@ export default function CasteDenialQAAnswer() {
         }
 
         if (allQasRes.ok) {
-          const allQas: QA[] = await allQasRes.json();
+          const allQas: CommonQA[] = await allQasRes.json();
           const currentIndex = allQas.findIndex(q => q.id.toString() === id);
           if (currentIndex !== -1 && currentIndex < allQas.length - 1) {
             setNextQa(allQas[currentIndex + 1]);
           }
         }
       } catch (err) {
-        console.error("Failed to fetch QA data", err);
+        console.error("Failed to fetch Common QA data", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -77,14 +77,14 @@ export default function CasteDenialQAAnswer() {
     fetchQAData();
 
     // Check for saved commenter name in localStorage
-    const savedName = localStorage.getItem("casteDenialQACommenterName");
+    const savedName = localStorage.getItem("commonQACommenterName");
     if (savedName) {
       setNewCommentName(savedName);
       setIsReturningUser(true);
     }
 
     // Check for owned comments
-    const savedCommentIds = localStorage.getItem("casteDenialQAMyCommentIds");
+    const savedCommentIds = localStorage.getItem("commonQAMyCommentIds");
     if (savedCommentIds) {
       try {
         setMyCommentIds(JSON.parse(savedCommentIds));
@@ -100,7 +100,7 @@ export default function CasteDenialQAAnswer() {
 
     setCommentSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments`, {
+      const res = await fetch(`http://localhost:8080/api/common-qa/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -115,13 +115,13 @@ export default function CasteDenialQAAnswer() {
         setNewCommentContent("");
         
         // Save name to localStorage and mark as returning user
-        localStorage.setItem("casteDenialQACommenterName", newCommentName);
+        localStorage.setItem("commonQACommenterName", newCommentName);
         setIsReturningUser(true);
 
         // Track ownership
         const newIds = [...myCommentIds, newComment.id];
         setMyCommentIds(newIds);
-        localStorage.setItem("casteDenialQAMyCommentIds", JSON.stringify(newIds));
+        localStorage.setItem("commonQAMyCommentIds", JSON.stringify(newIds));
       } else {
         alert("Failed to submit comment. Please try again.");
       }
@@ -136,7 +136,7 @@ export default function CasteDenialQAAnswer() {
   const handleEditSubmit = async (commentId: number) => {
     if (!editingCommentContent.trim()) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments/${commentId}`, {
+      const res = await fetch(`http://localhost:8080/api/common-qa/${id}/comments/${commentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: editingCommentContent })
@@ -158,14 +158,14 @@ export default function CasteDenialQAAnswer() {
   const handleDeleteComment = async (commentId: number) => {
     if (!confirm("Are you sure you want to delete this comment?")) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments/${commentId}`, {
+      const res = await fetch(`http://localhost:8080/api/common-qa/${id}/comments/${commentId}`, {
         method: "DELETE"
       });
       if (res.ok) {
         setComments(comments.filter(c => c.id !== commentId));
         const newIds = myCommentIds.filter(myId => myId !== commentId);
         setMyCommentIds(newIds);
-        localStorage.setItem("casteDenialQAMyCommentIds", JSON.stringify(newIds));
+        localStorage.setItem("commonQAMyCommentIds", JSON.stringify(newIds));
       } else {
         alert("Failed to delete comment.");
       }
@@ -180,7 +180,7 @@ export default function CasteDenialQAAnswer() {
       
       <main className="max-w-4xl mx-auto py-12 px-4">
         <div className="mb-6">
-          <Link href="/caste-denial-qa" className="text-[#c2185b] hover:text-[#ad1457] font-medium flex items-center gap-1">
+          <Link href="/common-qa" className="text-[#c2185b] hover:text-[#ad1457] font-medium flex items-center gap-1">
             <span>←</span> Back to Questions
           </Link>
         </div>
@@ -192,7 +192,7 @@ export default function CasteDenialQAAnswer() {
             <div className="text-center py-10">
               <h2 className="text-2xl font-bold text-red-600 mb-2">Question Not Found</h2>
               <p className="text-slate-600 mb-6">The question you are looking for does not exist or has been removed.</p>
-              <Link href="/caste-denial-qa" className="bg-[#c2185b] text-white px-6 py-2 rounded font-medium hover:bg-[#ad1457]">
+              <Link href="/common-qa" className="bg-[#c2185b] text-white px-6 py-2 rounded font-medium hover:bg-[#ad1457]">
                 Return to Q&A List
               </Link>
             </div>
@@ -208,7 +208,7 @@ export default function CasteDenialQAAnswer() {
               {nextQa && (
                 <div className="mt-10 border-t border-pink-100 pt-6">
                   <Link 
-                    href={`/caste-denial-qa/${nextQa.id}`}
+                    href={`/common-qa/${nextQa.id}`}
                     className="flex flex-col sm:items-end sm:text-right group"
                   >
                     <span className="text-sm font-semibold text-slate-500 mb-1 group-hover:text-[#c2185b] transition-colors">Next Question →</span>
@@ -241,7 +241,7 @@ export default function CasteDenialQAAnswer() {
                     onClick={() => {
                       setIsReturningUser(false);
                       setNewCommentName("");
-                      localStorage.removeItem("casteDenialQACommenterName");
+                      localStorage.removeItem("commonQACommenterName");
                     }}
                     className="text-xs text-blue-600 hover:text-blue-800 underline"
                   >
