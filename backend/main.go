@@ -4,8 +4,12 @@ import (
 	"backend/db"
 	"backend/models"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,6 +43,9 @@ func main() {
 
 		c.Next()
 	})
+
+	// Serve static files from the uploads directory
+	r.Static("/uploads", "./uploads")
 
 	// View all surveys
 	r.GET("/api/surveys", func(c *gin.Context) {
@@ -88,6 +95,35 @@ func main() {
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "Survey saved successfully", "id": survey.ID})
+	})
+
+	// Contact form submission endpoint
+	r.POST("/api/contact", func(c *gin.Context) {
+		var req struct {
+			Name    string `json:"name" binding:"required"`
+			Email   string `json:"email" binding:"required"`
+			Subject string `json:"subject"`
+			Message string `json:"message"`
+		}
+
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload or missing fields"})
+			return
+		}
+
+		contactMsg := models.ContactMessage{
+			Name:    req.Name,
+			Email:   req.Email,
+			Subject: req.Subject,
+			Message: req.Message,
+		}
+
+		if err := db.DB.Create(&contactMsg).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save contact message"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Contact message saved successfully", "id": contactMsg.ID})
 	})
 
 	// Admin Login endpoint (Simple Hardcoded for now)
@@ -372,6 +408,116 @@ func main() {
 	r.DELETE("/api/common-qa/:id", func(c *gin.Context) {
 		if err := db.DB.Delete(&models.CommonQuestion{}, c.Param("id")).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete QA"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
+	})
+
+	// Upload Endpoint
+	r.POST("/api/upload", func(c *gin.Context) {
+		file, err := c.FormFile("image")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+			return
+		}
+
+		// Create uploads directory if it doesn't exist
+		if _, err := os.Stat("uploads"); os.IsNotExist(err) {
+			os.Mkdir("uploads", 0755)
+		}
+
+		// Generate unique filename
+		ext := filepath.Ext(file.Filename)
+		filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
+		dst := filepath.Join("uploads", filename)
+
+		if err := c.SaveUploadedFile(file, dst); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"url": "/uploads/" + filename})
+	})
+
+	// Article Endpoints
+	r.GET("/api/articles", func(c *gin.Context) {
+		var articles []models.Article
+		if err := db.DB.Order("created_at desc").Find(&articles).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch articles"})
+			return
+		}
+		c.JSON(http.StatusOK, articles)
+	})
+
+	r.GET("/api/articles/:id", func(c *gin.Context) {
+		var article models.Article
+		if err := db.DB.First(&article, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+			return
+		}
+		c.JSON(http.StatusOK, article)
+	})
+
+	r.POST("/api/articles", func(c *gin.Context) {
+		var req struct {
+			Title    string `json:"title"`
+			Category string `json:"category"`
+			Author   string `json:"author"`
+			Date     string `json:"date"`
+			ImageURL string `json:"image_url"`
+			Content  string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		article := models.Article{
+			Title:    req.Title,
+			Category: req.Category,
+			Author:   req.Author,
+			Date:     req.Date,
+			ImageURL: req.ImageURL,
+			Content:  req.Content,
+		}
+		if err := db.DB.Create(&article).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create article"})
+			return
+		}
+		c.JSON(http.StatusOK, article)
+	})
+
+	r.PUT("/api/articles/:id", func(c *gin.Context) {
+		var article models.Article
+		if err := db.DB.First(&article, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+			return
+		}
+		var req struct {
+			Title    string `json:"title"`
+			Category string `json:"category"`
+			Author   string `json:"author"`
+			Date     string `json:"date"`
+			ImageURL string `json:"image_url"`
+			Content  string `json:"content"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		article.Title = req.Title
+		article.Category = req.Category
+		article.Author = req.Author
+		article.Date = req.Date
+		article.ImageURL = req.ImageURL
+		article.Content = req.Content
+		
+		db.DB.Save(&article)
+		c.JSON(http.StatusOK, article)
+	})
+
+	r.DELETE("/api/articles/:id", func(c *gin.Context) {
+		if err := db.DB.Delete(&models.Article{}, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete article"})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})

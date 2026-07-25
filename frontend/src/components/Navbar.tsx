@@ -7,6 +7,7 @@ import Script from "next/script";
 export default function Navbar() {
   const [qaOpen, setQaOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [audioOpen, setAudioOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasTranslateBanner, setHasTranslateBanner] = useState(false);
@@ -59,10 +60,10 @@ export default function Navbar() {
         style={{ top: hasTranslateBanner ? '40px' : '0px' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between md:justify-center h-16 md:h-12 items-center">
+          <div className="flex justify-between xl:justify-center h-16 xl:h-12 items-center">
 
             {/* Mobile Menu Button */}
-            <div className="flex items-center md:hidden">
+            <div className="flex items-center xl:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-white hover:text-pink-200 focus:outline-none p-2"
@@ -75,11 +76,11 @@ export default function Navbar() {
                   )}
                 </svg>
               </button>
-              <span className="font-bold ml-2 md:hidden">CCDM</span>
+              <span className="font-bold ml-2 xl:hidden">CCDM</span>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6 text-sm font-medium h-full">
+            <div className="hidden xl:flex items-center space-x-6 text-sm font-medium h-full">
               <Link href="/" className="hover:text-pink-200 transition-colors">Home</Link>
 
               {/* Gallery Dropdown */}
@@ -89,9 +90,20 @@ export default function Navbar() {
                 </button>
                 {galleryOpen && (
                   <div className="absolute top-full left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Pictures</Link>
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Audios</Link>
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Videos</Link>
+                    <Link href="/pictures" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Pictures</Link>
+                    <div className="relative" onMouseEnter={() => setAudioOpen(true)} onMouseLeave={() => setAudioOpen(false)}>
+                      <button className="w-full text-left flex items-center justify-between px-4 py-2 hover:bg-[#ad1457] text-white focus:outline-none">
+                        Audios <span className="text-[10px]">▶</span>
+                      </button>
+                      {audioOpen && (
+                        <div className="absolute top-0 left-full w-56 bg-[#c2185b] rounded shadow-lg py-2 ml-0.5">
+                          <Link href="/audios/nilaiyana-singasanam" className="block px-4 py-2 hover:bg-[#ad1457] text-white">நிலையான சிங்காசனம்</Link>
+                          <Link href="/audios/evarum-virumbum-iniya-deivam" className="block px-4 py-2 hover:bg-[#ad1457] text-white">எவரும் விரும்பும் இனிய தெய்வம்</Link>
+                          <Link href="/audios/suttha-kanna" className="block px-4 py-2 hover:bg-[#ad1457] text-white">சுத்த கண்ணா</Link>
+                        </div>
+                      )}
+                    </div>
+                    <Link href="/videos" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Videos</Link>
                   </div>
                 )}
               </div>
@@ -116,15 +128,15 @@ export default function Navbar() {
                 </button>
                 {servicesOpen && (
                   <div className="absolute top-full left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Blood Bank</Link>
+                    <Link href="/services/blood-bank" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Blood Bank</Link>
                     <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Matrimony</Link>
                   </div>
                 )}
               </div>
 
-              <Link href="#" className="hover:text-pink-200 transition-colors">Support us</Link>
-              <Link href="#" className="hover:text-pink-200 transition-colors">Contact us</Link>
-              <Link href="#" className="hover:text-pink-200 transition-colors">Articles</Link>
+              <Link href="/support-us" className="hover:text-pink-200 transition-colors">Support us</Link>
+              <Link href="/contact-us" className="hover:text-pink-200 transition-colors">Contact us</Link>
+              <Link href="/articles" className="hover:text-pink-200 transition-colors">Articles</Link>
               <Link href="#" className="hover:text-pink-200 transition-colors">Kindle-Version-Books</Link>
             </div>
 
@@ -138,15 +150,22 @@ export default function Navbar() {
 
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#c2185b] border-t border-pink-700">
+          <div className="xl:hidden bg-[#c2185b] border-t border-pink-700">
             <div className="px-4 pt-2 pb-4 space-y-1">
               <Link href="/" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Home</Link>
 
               <div className="px-3 py-2 font-medium border-b border-pink-700 text-pink-200">Gallery</div>
               <div className="pl-6 space-y-1">
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Pictures</Link>
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Audios</Link>
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Videos</Link>
+                <Link href="/pictures" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Pictures</Link>
+                <div className="space-y-1 pb-1">
+                  <div className="px-3 py-1 text-sm font-semibold text-pink-200">Audios:</div>
+                  <div className="pl-4 space-y-1 border-l-2 border-[#ad1457] ml-3">
+                    <Link href="/audios/nilaiyana-singasanam" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>நிலையான சிங்காசனம்</Link>
+                    <Link href="/audios/evarum-virumbum-iniya-deivam" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>எவரும் விரும்பும் இனிய தெய்வம்</Link>
+                    <Link href="/audios/suttha-kanna" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>சுத்த கண்ணா</Link>
+                  </div>
+                </div>
+                <Link href="/videos" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Videos</Link>
               </div>
 
               <div className="px-3 py-2 font-medium border-b border-pink-700 text-pink-200 mt-2">Questions & Answers</div>
@@ -157,13 +176,13 @@ export default function Navbar() {
 
               <div className="px-3 py-2 font-medium border-b border-pink-700 text-pink-200 mt-2">Services</div>
               <div className="pl-6 space-y-1">
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Blood Bank</Link>
+                <Link href="/services/blood-bank" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Blood Bank</Link>
                 <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Matrimony</Link>
               </div>
 
-              <Link href="#" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium mt-2" onClick={() => setMobileMenuOpen(false)}>Support us</Link>
-              <Link href="#" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
-              <Link href="#" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Articles</Link>
+              <Link href="/support-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium mt-2" onClick={() => setMobileMenuOpen(false)}>Support us</Link>
+              <Link href="/contact-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
+              <Link href="/articles" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Articles</Link>
               <Link href="#" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Kindle-Version-Books</Link>
             </div>
           </div>

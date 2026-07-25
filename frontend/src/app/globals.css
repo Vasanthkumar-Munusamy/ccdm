@@ -84,3 +84,13 @@ html[lang="ta"] body {
   display: none !important;
 }
 
+/* Quill Editor Alignment Classes for Frontend Rendering */
+.ql-align-center {
+  text-align: center;
+}
+.ql-align-right {
+  text-align: right;
+}
+.ql-align-justify {
+  text-align: justify;
+}

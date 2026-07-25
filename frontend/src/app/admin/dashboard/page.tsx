@@ -46,6 +46,10 @@ export default function AdminDashboard() {
             <h3 className="text-lg font-bold text-[#c2185b] mb-2">Common Questions</h3>
             <p className="text-slate-600 text-sm">Manage common questions shown on the public website.</p>
           </Link>
+          <Link href="/admin/articles" className="block bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow border border-slate-200">
+            <h3 className="text-lg font-bold text-[#c2185b] mb-2">Articles</h3>
+            <p className="text-slate-600 text-sm">Manage articles and upload images for the public website.</p>
+          </Link>
         </div>
       </main>
     </div>
