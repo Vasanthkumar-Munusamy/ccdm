@@ -102,13 +102,13 @@ export default function ArticlesManager() {
       document.querySelectorAll('button.ql-color').forEach(btn => {
         if (!btn.innerHTML.includes('font-weight:bold')) {
           btn.innerHTML = '<span style="font-weight:bold; color:#ff0000; font-size: 14px; text-decoration:underline;">A</span>';
-          btn.title = "Text Color";
+          (btn as HTMLElement).title = "Text Color";
         }
       });
       document.querySelectorAll('button.ql-background').forEach(btn => {
         if (!btn.innerHTML.includes('font-weight:bold')) {
           btn.innerHTML = '<span style="font-weight:bold; background-color:#ffeb3b; color:#000; padding:0 2px; font-size: 12px;">Bg</span>';
-          btn.title = "Background Color";
+          (btn as HTMLElement).title = "Background Color";
         }
       });
     }, 500); // Wait slightly for Quill to mount

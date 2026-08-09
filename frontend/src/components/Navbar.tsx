@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Script from "next/script";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const [qaOpen, setQaOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasTranslateBanner, setHasTranslateBanner] = useState(false);
+  const { user, logout } = useAuth();
 
   // Fix for Google Translate leaving an empty space at the top when the popup is closed.
   useEffect(() => {
@@ -129,7 +131,7 @@ export default function Navbar() {
                 {servicesOpen && (
                   <div className="absolute top-full left-0 w-40 bg-[#c2185b] rounded-b shadow-lg py-2">
                     <Link href="/services/blood-bank" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Blood Bank</Link>
-                    <Link href="#" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Matrimony</Link>
+                    <Link href="/services/matrimony" className="block px-4 py-2 hover:bg-[#ad1457] text-white">Matrimony</Link>
                   </div>
                 )}
               </div>
@@ -137,7 +139,18 @@ export default function Navbar() {
               <Link href="/support-us" className="hover:text-pink-200 transition-colors">Support us</Link>
               <Link href="/contact-us" className="hover:text-pink-200 transition-colors">Contact us</Link>
               <Link href="/articles" className="hover:text-pink-200 transition-colors">Articles</Link>
-              <Link href="#" className="hover:text-pink-200 transition-colors">Kindle-Version-Books</Link>
+              
+              {user ? (
+                <div className="flex items-center space-x-4 border-l border-[#d81b60] pl-4 ml-2">
+                  <span className="text-pink-100 hidden lg:inline">Hi, {user.name}</span>
+                  <button onClick={logout} className="hover:text-pink-200 transition-colors">Logout</button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-4 border-l border-[#d81b60] pl-4 ml-2">
+                  <Link href="/login" className="hover:text-pink-200 transition-colors">Login</Link>
+                  <Link href="/register" className="bg-white text-[#c2185b] px-3 py-1 rounded-full hover:bg-pink-100 transition-colors">Sign Up</Link>
+                </div>
+              )}
             </div>
 
             {/* Google Translate Element (Shared) */}
@@ -183,7 +196,25 @@ export default function Navbar() {
               <Link href="/support-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium mt-2" onClick={() => setMobileMenuOpen(false)}>Support us</Link>
               <Link href="/contact-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
               <Link href="/articles" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Articles</Link>
-              <Link href="#" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Kindle-Version-Books</Link>
+              
+              <div className="border-t border-pink-700 mt-2 pt-2">
+                {user ? (
+                  <>
+                    <div className="px-3 py-2 text-pink-200">Hi, {user.name}</div>
+                    <button 
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
+                      className="block w-full text-left px-3 py-2 rounded hover:bg-[#ad1457] font-medium"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                    <Link href="/register" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
