@@ -184,7 +184,7 @@ export default function MatrimonyPage() {
         if (submitRes.ok) {
           showAlert('Success', 'PDF Biodata uploaded and added successfully!');
           setIsModalOpen(false);
-          setFormData({ name: '', gender: '', age: '', location: '', height: '', education: '', occupation: '', expectation: '', contact_info: '', pdf_url: '' });
+          setFormData(emptyForm);
           fetchProfiles();
         } else {
           showAlert('Error', 'Failed to save Biodata.');
