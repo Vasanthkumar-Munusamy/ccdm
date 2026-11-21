@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { API_BASE_URL } from "@/config/api";
 
 export default function SupportUs() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ export default function SupportUs() {
     setSubmitting(true);
     
     try {
-      const res = await fetch("http://localhost:8080/api/contact", {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)

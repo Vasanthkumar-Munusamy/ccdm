@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/config/api";
 
 type QA = {
   id: number;
@@ -15,7 +16,7 @@ export default function CasteDenialQAList() {
   useEffect(() => {
     const fetchQAs = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/qa");
+        const res = await fetch(`${API_BASE_URL}/api/qa`);
         if (res.ok) {
           const data = await res.json();
           setQas(data);

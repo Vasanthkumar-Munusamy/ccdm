@@ -7,12 +7,14 @@ const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const notoSansTamil = Noto_Sans_Tamil({
   variable: "--font-noto-sans-tamil",
   subsets: ["tamil"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "@/config/api";
 
 type QA = {
   id: number;
@@ -30,7 +31,7 @@ export default function CasteDenialQAAnswer() {
   const [newCommentContent, setNewCommentContent] = useState("");
   const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [isReturningUser, setIsReturningUser] = useState(false);
-  
+
   const [myCommentIds, setMyCommentIds] = useState<number[]>([]);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editingCommentContent, setEditingCommentContent] = useState("");
@@ -38,13 +39,13 @@ export default function CasteDenialQAAnswer() {
   useEffect(() => {
     if (!id) return;
     window.scrollTo(0, 0);
-    
+
     const fetchQAData = async () => {
       try {
         const [qaRes, commentsRes, allQasRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/qa/${id}`),
-          fetch(`http://localhost:8080/api/qa/${id}/comments`),
-          fetch(`http://localhost:8080/api/qa`)
+          fetch(`${API_BASE_URL}/api/qa/${id}`),
+          fetch(`${API_BASE_URL}/api/qa/${id}/comments`),
+          fetch(`${API_BASE_URL}/api/qa`)
         ]);
 
         if (qaRes.ok) {
@@ -73,7 +74,7 @@ export default function CasteDenialQAAnswer() {
         setLoading(false);
       }
     };
-    
+
     fetchQAData();
 
     // Check for saved commenter name in localStorage
@@ -100,7 +101,7 @@ export default function CasteDenialQAAnswer() {
 
     setCommentSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments`, {
+      const res = await fetch(`${API_BASE_URL}/api/qa/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,7 +114,7 @@ export default function CasteDenialQAAnswer() {
         const newComment = await res.json();
         setComments([newComment, ...comments]);
         setNewCommentContent("");
-        
+
         // Save name to localStorage and mark as returning user
         localStorage.setItem("casteDenialQACommenterName", newCommentName);
         setIsReturningUser(true);
@@ -136,7 +137,7 @@ export default function CasteDenialQAAnswer() {
   const handleEditSubmit = async (commentId: number) => {
     if (!editingCommentContent.trim()) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments/${commentId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/qa/${id}/comments/${commentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: editingCommentContent })
@@ -158,7 +159,7 @@ export default function CasteDenialQAAnswer() {
   const handleDeleteComment = async (commentId: number) => {
     if (!confirm("Are you sure you want to delete this comment?")) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/qa/${id}/comments/${commentId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/qa/${id}/comments/${commentId}`, {
         method: "DELETE"
       });
       if (res.ok) {
@@ -177,14 +178,14 @@ export default function CasteDenialQAAnswer() {
 
   return (
     <div className="min-h-screen bg-pink-50 font-sans">
-      
+
       <main className="max-w-4xl mx-auto py-12 px-4">
         <div className="mb-6">
           <Link href="/caste-denial-qa" className="text-[#c2185b] hover:text-[#ad1457] font-medium flex items-center gap-1">
             <span>←</span> Back to Questions
           </Link>
         </div>
-        
+
         <div className="bg-white p-8 rounded-lg shadow-md border-t-4 border-[#c2185b]">
           {loading ? (
             <p className="text-center text-slate-600 py-10">Loading answer...</p>
@@ -207,7 +208,7 @@ export default function CasteDenialQAAnswer() {
 
               {nextQa && (
                 <div className="mt-10 border-t border-pink-100 pt-6">
-                  <Link 
+                  <Link
                     href={`/caste-denial-qa/${nextQa.id}`}
                     className="flex flex-col sm:items-end sm:text-right group"
                   >
@@ -226,18 +227,18 @@ export default function CasteDenialQAAnswer() {
         {!loading && !error && qa && (
           <div className="mt-8 bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-200 pb-2">Comments</h2>
-            
+
             {/* Post Comment Form */}
             <form onSubmit={handleCommentSubmit} className="mb-8 bg-slate-50 p-4 rounded-md border border-slate-200">
               <h3 className="font-semibold text-slate-700 mb-3">Leave a comment</h3>
-              
+
               {isReturningUser ? (
                 <div className="mb-4 flex items-center justify-between bg-white p-3 border border-slate-200 rounded">
                   <span className="text-slate-700">
                     Commenting as <strong className="text-slate-900">{newCommentName}</strong>
                   </span>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setIsReturningUser(false);
                       setNewCommentName("");
@@ -299,7 +300,7 @@ export default function CasteDenialQAAnswer() {
                           </span>
                           {isOwner && !isEditing && (
                             <div className="flex gap-2">
-                              <button 
+                              <button
                                 onClick={() => {
                                   setEditingCommentId(comment.id);
                                   setEditingCommentContent(comment.content);
@@ -308,7 +309,7 @@ export default function CasteDenialQAAnswer() {
                               >
                                 Edit
                               </button>
-                              <button 
+                              <button
                                 onClick={() => handleDeleteComment(comment.id)}
                                 className="text-xs text-red-600 hover:text-red-800"
                               >
@@ -318,7 +319,7 @@ export default function CasteDenialQAAnswer() {
                           )}
                         </div>
                       </div>
-                      
+
                       {isEditing ? (
                         <div className="mt-2">
                           <textarea

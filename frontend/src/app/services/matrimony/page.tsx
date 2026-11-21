@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import AlertModal from '@/components/AlertModal';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE_URL } from '@/config/api';
 
 const PdfThumbnail = dynamic(() => import('@/components/PdfThumbnail'), { ssr: false });
 
@@ -121,7 +122,7 @@ export default function MatrimonyPage() {
 
   const fetchProfiles = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/matrimony');
+      const res = await fetch(`${API_BASE_URL}/api/matrimony`);
       if (res.ok) {
         const data = await res.json();
         setProfiles(data);
@@ -152,7 +153,7 @@ export default function MatrimonyPage() {
     data.append('image', file); // Use 'image' to ensure compatibility with backend
 
     try {
-      const res = await fetch('http://localhost:8080/api/upload', {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: data,
@@ -172,7 +173,7 @@ export default function MatrimonyPage() {
           pdf_url: result.url
         };
 
-        const submitRes = await fetch('http://localhost:8080/api/matrimony', {
+        const submitRes = await fetch(`${API_BASE_URL}/api/matrimony`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -209,7 +210,7 @@ export default function MatrimonyPage() {
       if (selectedImage) {
         const data = new FormData();
         data.append('image', selectedImage);
-        const uploadRes = await fetch('http://localhost:8080/api/upload', {
+        const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           headers: token ? { 'Authorization': `Bearer ${token}` } : {},
           body: data,
@@ -228,7 +229,7 @@ export default function MatrimonyPage() {
         image_url: imageUrl,
       };
 
-      const endpoint = editingProfileId ? `http://localhost:8080/api/matrimony/${editingProfileId}` : 'http://localhost:8080/api/matrimony';
+      const endpoint = editingProfileId ? `${API_BASE_URL}/api/matrimony/${editingProfileId}` : `${API_BASE_URL}/api/matrimony`;
       const method = editingProfileId ? 'PUT' : 'POST';
 
       const res = await fetch(endpoint, {
@@ -261,7 +262,7 @@ export default function MatrimonyPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this profile?')) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/matrimony/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/matrimony/${id}`, {
         method: 'DELETE',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {},
       });
@@ -359,11 +360,11 @@ export default function MatrimonyPage() {
                   >
                     <div
                       className="flex flex-col rounded-xl overflow-hidden h-full cursor-pointer hover:shadow-lg transition-shadow"
-                      onClick={() => setPreviewPdfUrl(`http://localhost:8080${profile.pdf_url}`)}
+                      onClick={() => setPreviewPdfUrl(`${API_BASE_URL}${profile.pdf_url}`)}
                     >
                       {/* Portion 1: PDF Preview */}
                       <div className="h-48 bg-gray-50 flex items-start justify-center relative overflow-hidden border-b border-gray-200">
-                        <PdfThumbnail url={`http://localhost:8080${profile.pdf_url}`} />
+                        <PdfThumbnail url={`${API_BASE_URL}${profile.pdf_url}`} />
                         <div className="absolute inset-0 bg-transparent group-hover:bg-black/10 transition-colors flex items-center justify-center z-10">
                           <span className="opacity-0 group-hover:opacity-100 text-white bg-black/60 px-4 py-2 rounded-full font-medium text-sm transition-opacity duration-300 shadow-sm flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -405,7 +406,7 @@ export default function MatrimonyPage() {
                     {/* Portion 1: Photo Preview */}
                     <div className="h-48 bg-gray-50 flex items-start justify-center relative overflow-hidden border-b border-gray-200">
                       {profile.image_url ? (
-                        <img src={`http://localhost:8080${profile.image_url}`} alt={profile.name} className="w-full h-full object-cover" />
+                        <img src={`${API_BASE_URL}${profile.image_url}`} alt={profile.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400">
                           <svg className="w-12 h-12 mb-2 text-gray-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
@@ -665,7 +666,7 @@ export default function MatrimonyPage() {
                 {/* Photo */}
                 <div className="w-full md:w-1/3 flex-shrink-0">
                   {previewDetailsProfile.image_url ? (
-                    <img src={`http://localhost:8080${previewDetailsProfile.image_url}`} alt={previewDetailsProfile.name} className="w-full rounded-lg shadow-sm border border-gray-200" />
+                    <img src={`${API_BASE_URL}${previewDetailsProfile.image_url}`} alt={previewDetailsProfile.name} className="w-full rounded-lg shadow-sm border border-gray-200" />
                   ) : (
                     <div className="w-full aspect-[3/4] rounded-lg shadow-sm border border-gray-200 bg-gray-100 flex flex-col items-center justify-center text-gray-400">
                       <svg className="w-16 h-16 mb-2 text-gray-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
@@ -754,7 +755,7 @@ export default function MatrimonyPage() {
                       <button
                         onClick={() => {
                           setPreviewDetailsProfile(null);
-                          setPreviewPdfUrl(`http://localhost:8080${previewDetailsProfile.pdf_url}`);
+                          setPreviewPdfUrl(`${API_BASE_URL}${previewDetailsProfile.pdf_url}`);
                         }}
                         className="inline-flex items-center gap-2 bg-[#c2185b] hover:bg-[#ad1457] text-white px-6 py-2 rounded-lg transition-colors font-medium"
                       >

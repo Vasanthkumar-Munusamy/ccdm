@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/config/api";
 
 export default function Home() {
   const router = useRouter();
@@ -91,7 +92,7 @@ export default function Home() {
           answers: answers
         };
 
-        const response = await fetch("http://localhost:8080/api/survey", {
+        const response = await fetch(`${API_BASE_URL}/api/survey`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

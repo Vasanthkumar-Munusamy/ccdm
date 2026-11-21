@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Clock } from "lucide-react";
+import { API_BASE_URL } from "@/config/api";
 
 type Article = {
   id: number;
@@ -18,7 +19,7 @@ export default function ArticlesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/articles")
+    fetch(`${API_BASE_URL}/api/articles`)
       .then((res) => res.json())
       .then((data) => {
         setArticles(data || []);
@@ -58,7 +59,7 @@ export default function ArticlesPage() {
                   {/* Image Section */}
                   <div className="w-full sm:w-2/5 h-48 sm:h-auto overflow-hidden relative bg-slate-100">
                     <img
-                      src={article.image_url.startsWith('/') ? `http://localhost:8080${article.image_url}` : article.image_url}
+                      src={article.image_url.startsWith('/') ? `${API_BASE_URL}${article.image_url}` : article.image_url}
                       alt={article.title}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                     />
@@ -72,9 +73,9 @@ export default function ArticlesPage() {
                       </span>
                     </div>
 
-                    <div 
+                    <div
                       className="text-xl md:text-2xl font-bold text-slate-800 mb-4 line-clamp-3 group-hover:text-[#c2185b] transition-colors break-words whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{ __html: article.title.replace(/&nbsp;|\u00A0/g, ' ') }} 
+                      dangerouslySetInnerHTML={{ __html: article.title.replace(/&nbsp;|\u00A0/g, ' ') }}
                     />
 
                     <div className="mt-auto flex items-center text-sm text-slate-500 font-medium">

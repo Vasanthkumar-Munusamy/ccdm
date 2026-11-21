@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Clock, User } from "lucide-react";
+import { API_BASE_URL } from "@/config/api";
 
 type Article = {
   id: number;
@@ -24,7 +25,7 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     if (!params.id) return;
 
-    fetch(`http://localhost:8080/api/articles/${params.id}`)
+    fetch(`${API_BASE_URL}/api/articles/${params.id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Article not found");
         return res.json();
@@ -58,7 +59,7 @@ export default function ArticleDetailPage() {
     );
   }
 
-  const imageUrl = article.image_url.startsWith('/') ? `http://localhost:8080${article.image_url}` : article.image_url;
+  const imageUrl = article.image_url.startsWith('/') ? `${API_BASE_URL}${article.image_url}` : article.image_url;
 
   return (
     <div className="min-h-screen bg-white font-sans py-12 px-4 sm:px-6 lg:px-8">

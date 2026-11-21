@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "@/config/api";
 
 type CommonQA = {
   id: number;
@@ -31,7 +32,7 @@ export default function CommonQAManager() {
 
   const fetchQAs = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/common-qa");
+      const res = await fetch(`${API_BASE_URL}/api/common-qa`);
       if (res.ok) {
         const data = await res.json();
         setQas(data);
@@ -46,8 +47,8 @@ export default function CommonQAManager() {
     setLoading(true);
     
     const url = editingId 
-      ? `http://localhost:8080/api/common-qa/${editingId}`
-      : "http://localhost:8080/api/common-qa";
+      ? `${API_BASE_URL}/api/common-qa/${editingId}`
+      : `${API_BASE_URL}/api/common-qa`;
       
     const method = editingId ? "PUT" : "POST";
 
@@ -86,7 +87,7 @@ export default function CommonQAManager() {
     if (!confirm("Are you sure you want to delete this question?")) return;
     
     try {
-      const res = await fetch(`http://localhost:8080/api/common-qa/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/common-qa/${id}`, {
         method: "DELETE"
       });
       if (res.ok) {

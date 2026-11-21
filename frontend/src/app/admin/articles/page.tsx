@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { API_BASE_URL } from "@/config/api";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -117,7 +118,7 @@ export default function ArticlesManager() {
 
   const fetchArticles = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/articles");
+      const res = await fetch(`${API_BASE_URL}/api/articles`);
       if (res.ok) {
         const data = await res.json();
         setArticles(data || []);
@@ -141,7 +142,7 @@ export default function ArticlesManager() {
     formData.append("image", selectedFile);
 
     try {
-      const res = await fetch("http://localhost:8080/api/upload", {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -187,8 +188,8 @@ export default function ArticlesManager() {
     }
 
     const url = editingId
-      ? `http://localhost:8080/api/articles/${editingId}`
-      : "http://localhost:8080/api/articles";
+      ? `${API_BASE_URL}/api/articles/${editingId}`
+      : `${API_BASE_URL}/api/articles`;
 
     const method = editingId ? "PUT" : "POST";
 
@@ -237,7 +238,7 @@ export default function ArticlesManager() {
     if (!confirm("Are you sure you want to delete this article?")) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/articles/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
         method: "DELETE"
       });
       if (res.ok) {
@@ -372,7 +373,7 @@ export default function ArticlesManager() {
                     {article.image_url && (
                       <div className="w-full sm:w-24 h-24 flex-shrink-0 bg-slate-100 rounded overflow-hidden">
                         <img
-                          src={article.image_url.startsWith('/') ? `http://localhost:8080${article.image_url}` : article.image_url}
+                          src={article.image_url.startsWith('/') ? `${API_BASE_URL}${article.image_url}` : article.image_url}
                           alt="Thumbnail"
                           className="w-full h-full object-cover"
                         />
