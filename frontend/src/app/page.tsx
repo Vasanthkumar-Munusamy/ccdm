@@ -10,14 +10,14 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [modalState, setModalState] = useState<{isOpen: boolean, type: 'success' | 'error', message: string}>({
+  const [modalState, setModalState] = useState<{ isOpen: boolean, type: 'success' | 'error', message: string }>({
     isOpen: false,
     type: 'success',
     message: ''
   });
 
   const closeModal = () => {
-    setModalState(prev => ({...prev, isOpen: false}));
+    setModalState(prev => ({ ...prev, isOpen: false }));
     if (modalState.type === 'success') {
       router.push('/caste-denial-qa');
     }
@@ -584,7 +584,7 @@ export default function Home() {
             </h3>
             <p className="text-slate-700 mb-6">{modalState.message}</p>
             <div className="flex justify-end">
-              <button 
+              <button
                 onClick={closeModal}
                 className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors"
               >
