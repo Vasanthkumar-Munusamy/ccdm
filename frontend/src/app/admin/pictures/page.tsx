@@ -93,7 +93,12 @@ export default function PicturesManager() {
       });
 
       if (!saveRes.ok) {
-        throw new Error("Failed to save picture record.");
+        let errorMsg = `Server returned ${saveRes.status}`;
+        try {
+          const errData = await saveRes.json();
+          if (errData?.error) errorMsg += `: ${errData.error}`;
+        } catch (_) {}
+        throw new Error(`Failed to save picture record: ${errorMsg}`);
       }
 
       // Reset form
