@@ -826,6 +826,47 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 	})
 
+	// --- Pictures Gallery Endpoints ---
+	r.GET("/api/pictures", func(c *gin.Context) {
+		var pictures []models.Picture
+		if err := db.DB.Order("created_at desc").Find(&pictures).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch pictures"})
+			return
+		}
+		c.JSON(http.StatusOK, pictures)
+	})
+
+	r.POST("/api/pictures", func(c *gin.Context) {
+		var req struct {
+			Title    string `json:"title"`
+			ImageURL string `json:"image_url" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		picture := models.Picture{
+			Title:    req.Title,
+			ImageURL: req.ImageURL,
+		}
+
+		if err := db.DB.Create(&picture).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save picture"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, picture)
+	})
+
+	r.DELETE("/api/pictures/:id", func(c *gin.Context) {
+		if err := db.DB.Delete(&models.Picture{}, c.Param("id")).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete picture"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Picture deleted successfully"})
+	})
+
 	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -17,7 +17,7 @@ func Connect() {
 	}
 
 	// Auto Migrate our models
-	err = database.AutoMigrate(&models.User{}, &models.MatrimonialProfile{}, &models.SurveyResponse{}, &models.CasteDenialQA{}, &models.QAComment{}, &models.CommonQuestion{}, &models.CommonQuestionComment{}, &models.ContactMessage{}, &models.Article{})
+	err = database.AutoMigrate(&models.User{}, &models.MatrimonialProfile{}, &models.SurveyResponse{}, &models.CasteDenialQA{}, &models.QAComment{}, &models.CommonQuestion{}, &models.CommonQuestionComment{}, &models.ContactMessage{}, &models.Article{}, &models.Picture{})
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}

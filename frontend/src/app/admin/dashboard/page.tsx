@@ -54,6 +54,10 @@ export default function AdminDashboard() {
             <h3 className="text-lg font-bold text-[#c2185b] mb-2">Matrimonial Profiles</h3>
             <p className="text-slate-600 text-sm">Manage and delete uploaded biodata profiles.</p>
           </Link>
+          <Link href="/admin/pictures" className="block bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow border border-slate-200">
+            <h3 className="text-lg font-bold text-[#c2185b] mb-2">Pictures Gallery</h3>
+            <p className="text-slate-600 text-sm">Upload and manage gallery images displayed on the public website.</p>
+          </Link>
         </div>
       </main>
     </div>

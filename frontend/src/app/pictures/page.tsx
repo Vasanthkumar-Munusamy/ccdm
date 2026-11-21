@@ -1,53 +1,58 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/config/api";
 
-// Placeholder images for the gallery until the actual images are uploaded
-const galleryImages = [
-  { id: 1, src: "/images/photo1.jpg", alt: "photo 1" },
-  { id: 2, src: "/images/photo2.jpg", alt: "photo 2" },
-  { id: 3, src: "/images/photo3.jpg", alt: "photo 3" },
-  { id: 4, src: "/images/photo4.jpg", alt: "photo 4" },
-  { id: 5, src: "/images/photo5.jpg", alt: "photo 5" },
-  { id: 6, src: "/images/photo6.jpg", alt: "photo 6" },
-  { id: 7, src: "/images/photo7.jpg", alt: "photo 7" },
-  { id: 8, src: "/images/photo8.jpg", alt: "photo 8" },
-  { id: 9, src: "/images/photo9.jpg", alt: "photo 9" },
-  { id: 10, src: "/images/photo10.jpg", alt: "photo 10" },
-  { id: 11, src: "/images/photo11.jpg", alt: "photo 11" },
-  { id: 12, src: "/images/photo12.jpg", alt: "photo 12" },
-  { id: 13, src: "/images/photo13.jpg", alt: "photo 13" },
-  { id: 14, src: "/images/photo14.jpg", alt: "photo 14" },
-  { id: 15, src: "/images/photo15.jpg", alt: "photo 15" },
-  { id: 16, src: "/images/photo16.jpg", alt: "photo 16" },
-  { id: 17, src: "/images/photo17.jpg", alt: "photo 17" },
-  { id: 18, src: "/images/photo18.jpg", alt: "photo 18" },
-  { id: 19, src: "/images/photo19.jpg", alt: "photo 19" },
-  { id: 20, src: "/images/photo20.jpg", alt: "photo 20" },
-  { id: 21, src: "/images/photo21.jpg", alt: "photo 21" },
-  { id: 22, src: "/images/photo22.jpg", alt: "photo 22" },
-  { id: 23, src: "/images/photo23.jpg", alt: "photo 23" },
-  { id: 24, src: "/images/photo24.jpg", alt: "photo 24" },
-  { id: 25, src: "/images/photo25.jpg", alt: "photo 25" },
-  { id: 26, src: "/images/photo26.jpg", alt: "photo 26" },
-  { id: 27, src: "/images/photo27.jpg", alt: "photo 27" },
-  { id: 28, src: "/images/photo28.jpg", alt: "photo 28" },
-  { id: 29, src: "/images/photo29.jpg", alt: "photo 29" },
-  { id: 30, src: "/images/photo30.jpg", alt: "photo 30" },
-  { id: 31, src: "/images/photo31.jpg", alt: "photo 31" },
-  { id: 32, src: "/images/photo32.jpg", alt: "photo 32" },
-  { id: 33, src: "/images/photo33.jpg", alt: "photo 33" },
-  { id: 34, src: "/images/photo34.jpg", alt: "photo 34" },
-  { id: 35, src: "/images/photo35.jpg", alt: "photo 35" },
-  { id: 36, src: "/images/photo36.jpg", alt: "photo 36" },
-  { id: 37, src: "/images/photo37.jpg", alt: "photo 37" },
-  { id: 38, src: "/images/photo38.jpg", alt: "photo 38" },
-  { id: 39, src: "/images/photo39.jpg", alt: "photo 39" },
-];
+type DynamicPicture = {
+  id: number;
+  title: string;
+  image_url: string;
+  created_at: string;
+};
+
+// Default placeholder images
+const defaultImages = Array.from({ length: 39 }, (_, i) => ({
+  id: `default-${i + 1}`,
+  src: `/images/photo${i + 1}.jpg`,
+  alt: `photo ${i + 1}`,
+  title: "",
+}));
 
 export default function PicturesPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [dynamicPictures, setDynamicPictures] = useState<DynamicPicture[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPictures = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/pictures`);
+        if (res.ok) {
+          const data = await res.json();
+          setDynamicPictures(data || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch gallery pictures:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPictures();
+  }, []);
+
+  // Format dynamic pictures into unified gallery format
+  const formattedDynamic = dynamicPictures.map((pic) => ({
+    id: `dynamic-${pic.id}`,
+    src: pic.image_url.startsWith("/")
+      ? `${API_BASE_URL}${pic.image_url}`
+      : pic.image_url,
+    alt: pic.title || "Gallery picture",
+    title: pic.title,
+  }));
+
+  // Newly uploaded pictures appear first, followed by default photos
+  const allImages = [...formattedDynamic, ...defaultImages];
 
   return (
     <div className="min-h-screen bg-pink-50 font-sans p-4 py-12">
@@ -61,20 +66,25 @@ export default function PicturesPage() {
 
         {/* Grid Layout */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {galleryImages.map((image) => (
+          {allImages.map((image) => (
             <div
               key={image.id}
-              className="group aspect-square md:aspect-[4/5] bg-white rounded-2xl shadow-md border-t-4 border-[#c2185b] cursor-pointer p-2 transition-shadow hover:shadow-lg flex flex-col"
+              className="group aspect-square md:aspect-[4/5] bg-white rounded-2xl shadow-md border-t-4 border-[#c2185b] cursor-pointer p-2 transition-shadow hover:shadow-lg flex flex-col justify-between"
               onClick={() => setSelectedImage(image.src)}
             >
-              <div className="relative w-full h-full rounded-xl overflow-hidden">
-                <Image
+              <div className="relative w-full flex-1 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center min-h-0">
+                <img
                   src={image.src}
                   alt={image.alt}
-                  fill
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
                 />
               </div>
+              {image.title && (
+                <p className="text-xs font-semibold text-slate-700 text-center truncate pt-2 px-1">
+                  {image.title}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -93,12 +103,14 @@ export default function PicturesPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="relative w-full max-w-4xl h-full max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
-              <Image
+            <div
+              className="relative w-full max-w-4xl h-full max-h-[90vh] flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
                 src={selectedImage}
                 alt="Selected Fullscreen"
-                fill
-                className="object-contain"
+                className="max-w-full max-h-full object-contain rounded-lg"
               />
             </div>
           </div>
