@@ -34,31 +34,31 @@ export default function Home() {
     switch (currentStep) {
       case 1:
         if (!answers.q1) {
-          errorMessage = "Please choose any one option!";
+          errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         } else if (answers.q1 === "Acceptable" && !answers.q1_reason) {
-          errorMessage = "You must tell the reason for accepting it";
+          errorMessage = "ஏற்றுக்கொள்வதற்கான காரணத்தை நீங்கள் தெரிவிக்க வேண்டும்";
         }
         break;
       case 2:
-        if (!answers.q2) errorMessage = "Please choose any one option!";
+        if (!answers.q2) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 3:
-        if (!answers.q3) errorMessage = "Please choose any one option!";
+        if (!answers.q3) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 4:
-        if (!answers.q4) errorMessage = "Please choose any one option!";
+        if (!answers.q4) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 5:
-        if (!answers.q5) errorMessage = "Please choose any one option!";
+        if (!answers.q5) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 6:
-        if (!answers.q6) errorMessage = "Please choose any one option!";
+        if (!answers.q6) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 7:
-        if (!answers.q7) errorMessage = "Please choose any one option!";
+        if (!answers.q7) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 8:
-        if (!answers.q8) errorMessage = "Please choose any one option!";
+        if (!answers.q8) errorMessage = "தயவுசெய்து ஏதேனும் ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்!";
         break;
       case 9:
         // Just a link
@@ -68,7 +68,7 @@ export default function Home() {
         break;
       case 11:
         if (!answers.name || !answers.email || !answers.phone || !answers.q11_address) {
-          errorMessage = "Please enter your Name, Email, Phone, and Address to finish.";
+          errorMessage = "முடிக்க உங்கள் பெயர், மின்னஞ்சல், தொலைபேசி மற்றும் முகவரியை உள்ளிடவும்.";
         }
         break;
     }
@@ -110,10 +110,10 @@ export default function Home() {
         }
 
         console.log("Survey Completed:", answers);
-        setModalState({ isOpen: true, type: 'success', message: "Thank you for completing the survey!" });
+        setModalState({ isOpen: true, type: 'success', message: "கருத்துக்கணிப்பில் பங்கேற்றதற்கு நன்றி!" });
       } catch (err) {
         console.error(err);
-        setModalState({ isOpen: true, type: 'error', message: "There was an error submitting your response. Please try again." });
+        setModalState({ isOpen: true, type: 'error', message: "உங்கள் பதிலைச் சமர்ப்பிப்பதில் பிழை ஏற்பட்டது. தயவுசெய்து மீண்டும் முயற்சிக்கவும்." });
       }
     }
   };
@@ -156,32 +156,32 @@ export default function Home() {
 
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-              <h2 className="text-xl font-bold md:mb-0">Question No. <span>{currentStep}</span></h2>
+              <h2 className="text-xl font-bold md:mb-0">கேள்வி எண்: <span>{currentStep}</span></h2>
             </div>
 
             {/* Question 1 */}
             {currentStep === 1 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Dear brother, greetings in the name of Jesus Christ. Believing that you are a Christian who thinks progressively and is grounded in Scripture, I ask you this simple question. I humbly request that you please provide an answer.
+                  அன்பான சகோதரரே, இயேசு கிறிஸ்துவின் நாமத்தில் வாழ்த்துக்கள். வேதத்தை அடிப்படையாகக் கொண்டு, முற்போக்காகச் சிந்திக்கும் கிறிஸ்தவராக நீங்கள் இருப்பீர்கள் என்ற நம்பிக்கையில், இந்த எளிய கேள்வியை உங்களிடம் கேட்கிறேன். இதற்குத் தாங்கள் தயவுசெய்து பதிலளிக்குமாறு அன்போடு கேட்டுக்கொள்கிறேன்.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Some Christian churches and wedding halls on the same street have been built separately based on caste. Certain Christian cemeteries and funeral hearses are also segregated along caste lines. Christians often overlook fellow Christians based on caste when it comes to marriage. In your view, are these practices acceptable? Please give your candid response.
+                  ஒரே தெருவில் சில கிறிஸ்தவ ஆலயங்களும், திருமண மண்டபங்களும் சாதி வாரியாகத் தனித்தனியாகக் கட்டப்பட்டுள்ளன. சில கிறிஸ்தவக் கல்லறைத் தோட்டங்களும், சவப்பெட்டி வண்டிகளும் கூட சாதி அடிப்படையில் பிரிக்கப்பட்டுள்ளன. மேலும் திருமண விஷயத்தில் கிறிஸ்தவர்கள் சக கிறிஸ்தவர்களைச் சாதியின் அடிப்படையில் புறக்கணிக்கின்றனர். உங்கள் பார்வையில் இந்த நடைமுறைகள் ஏற்றுக்கொள்ளத்தக்கவையா? உங்கள் வெளிப்படையான பதிலை அளியுங்கள்.
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q1" value="Acceptable" checked={answers.q1 === "Acceptable"} onChange={(e) => updateAnswer("q1", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Acceptable</span>
+                    <span>அ) ஏற்றுக்கொள்ளத்தக்கது</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q1" value="Not Acceptable" checked={answers.q1 === "Not Acceptable"} onChange={(e) => updateAnswer("q1", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) Not Acceptable</span>
+                    <span>ஆ) ஏற்றுக்கொள்ள முடியாதது</span>
                   </label>
                 </div>
                 {answers.q1 === "Acceptable" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If acceptable, please write the reason here."
+                      placeholder="ஏற்றுக்கொள்ளத்தக்கது என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q1_reason || ""}
@@ -193,12 +193,12 @@ export default function Home() {
                           if (answers.q1_reason && answers.q1_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -210,22 +210,22 @@ export default function Home() {
             {currentStep === 2 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Good. Do you assure that, even if others consider caste regarding weddings in your family, you will not?
+                  நல்லது. உங்கள் குடும்பத் திருமணங்களில் மற்றவர்கள் சாதியைப் பார்த்தாலும், நீங்கள் சாதி பார்க்கமாட்டீர்கள் என்று உறுதியளிக்கிறீர்களா?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q2" value="Yes" checked={answers.q2 === "Yes"} onChange={(e) => updateAnswer("q2", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Yes</span>
+                    <span>அ) ஆம்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q2" value="No" checked={answers.q2 === "No"} onChange={(e) => updateAnswer("q2", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) No</span>
+                    <span>ஆ) இல்லை</span>
                   </label>
                 </div>
                 {answers.q2 === "No" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If no, please write the reason here."
+                      placeholder="இல்லை என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q2_reason || ""}
@@ -237,12 +237,12 @@ export default function Home() {
                           if (answers.q2_reason && answers.q2_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -254,22 +254,22 @@ export default function Home() {
             {currentStep === 3 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  If the government were to consolidate those who identify as casteless—even though they belong to communities affected by the caste system—issue them a "Non-Caste" (NC) certificate, and provide a separate reservation quota for this category, would you be willing to switch to that category, brother?
+                  சாதி அமைப்பினால் பாதிக்கப்பட்ட சமூகங்களைச் சேர்ந்தவர்களாக இருந்தாலும், தங்களைச் சாதியற்றவர்களாகக் கருதுபவர்களை அரசு ஒன்றிணைத்து, அவர்களுக்கு "சாதியற்றவர்" (Non-Caste - NC) சான்றிதழ் வழங்கி, இந்தப் பிரிவுக்குத் தனி இடஒதுக்கீடு வழங்கினால், நீங்கள் அந்தப் பிரிவுக்கு மாறத் தயாரா, சகோதரரே?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q3" value="Yes" checked={answers.q3 === "Yes"} onChange={(e) => updateAnswer("q3", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Yes</span>
+                    <span>அ) ஆம்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q3" value="No" checked={answers.q3 === "No"} onChange={(e) => updateAnswer("q3", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) No</span>
+                    <span>ஆ) இல்லை</span>
                   </label>
                 </div>
                 {answers.q3 === "No" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If no, please write the reason here."
+                      placeholder="இல்லை என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q3_reason || ""}
@@ -281,12 +281,12 @@ export default function Home() {
                           if (answers.q3_reason && answers.q3_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -298,16 +298,16 @@ export default function Home() {
             {currentStep === 4 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Brother, what is the reason that the caste-free brotherhood—known only to a few of us—remains unknown to many others?
+                  சகோதரரே, நம்மில் ஒரு சிலருக்கு மட்டுமே தெரிந்த சாதியற்ற சகோதரத்துவம், பலருக்குத் தெரியாமல் இருப்பதற்கு என்ன காரணம்?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q4" value="Pastors do not preach it" checked={answers.q4 === "Pastors do not preach it"} onChange={(e) => updateAnswer("q4", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Pastors do not preach it</span>
+                    <span>அ) போதகர்கள் இதை பிரசங்கிப்பதில்லை</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q4" value="The reason is unknown" checked={answers.q4 === "The reason is unknown"} onChange={(e) => updateAnswer("q4", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) The reason is unknown</span>
+                    <span>ஆ) காரணம் தெரியவில்லை</span>
                   </label>
                 </div>
               </div>
@@ -317,16 +317,16 @@ export default function Home() {
             {currentStep === 5 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  What do you think is the reason why many preachers do not preach about caste-free brotherhood?
+                  சாதியற்ற சகோதரத்துவத்தைப் பற்றிப் பல போதகர்கள் பிரசங்கிக்காததற்கு என்ன காரணம் என்று நீங்கள் நினைக்கிறீர்கள்?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q5" value="Fear of antagonizing believers who are caste-conscious" checked={answers.q5 === "Fear of antagonizing believers who are caste-conscious"} onChange={(e) => updateAnswer("q5", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Fear of antagonizing believers who are caste-conscious</span>
+                    <span>அ) சாதி உணர்வுள்ள விசுவாசிகளைப் பகைத்துக் கொள்வோமோ என்ற பயம்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q5" value="The preacher's own caste consciousness" checked={answers.q5 === "The preacher's own caste consciousness"} onChange={(e) => updateAnswer("q5", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) The preacher's own caste consciousness</span>
+                    <span>ஆ) போதகரின் சொந்த சாதி உணர்வு</span>
                   </label>
                 </div>
               </div>
@@ -336,22 +336,22 @@ export default function Home() {
             {currentStep === 6 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  In that case, as Christians who know that caste discrimination is a sin, it is we who must spread casteless brotherhood within the church—isn't that right?
+                  அப்படியானால், சாதிப் பாகுபாடு பாவம் என்று அறிந்த கிறிஸ்தவர்களாகிய நாம்தான் திருச்சபைக்குள் சாதியற்ற சகோதரத்துவத்தைப் பரப்ப வேண்டும்—அல்லவா?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q6" value="Yes" checked={answers.q6 === "Yes"} onChange={(e) => updateAnswer("q6", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Yes</span>
+                    <span>அ) ஆம்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q6" value="No" checked={answers.q6 === "No"} onChange={(e) => updateAnswer("q6", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) No</span>
+                    <span>ஆ) இல்லை</span>
                   </label>
                 </div>
                 {answers.q6 === "No" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If no, please write the reason here."
+                      placeholder="இல்லை என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q6_reason || ""}
@@ -363,12 +363,12 @@ export default function Home() {
                           if (answers.q6_reason && answers.q6_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -380,23 +380,23 @@ export default function Home() {
             {currentStep === 7 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  The unity of those who believe in the caste system is a major reason why caste persists. Therefore, to liberate them from the caste system, we—who are casteless—must forge an even stronger unity among ourselves. <br /><br />
-                  Is what I am saying correct?
+                  சாதி அமைப்பை நம்புபவர்களின் ஒற்றுமையே சாதி நீடிப்பதற்குக் முக்கிய காரணம். எனவே, அவர்களைச் சாதி அமைப்பிலிருந்து விடுவிக்க, சாதியற்ற நாம் நமக்குள் இன்னும் வலுவான ஒற்றுமையை உருவாக்க வேண்டும். <br /><br />
+                  நான் சொல்வது சரிதானே?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q7" value="Yes" checked={answers.q7 === "Yes"} onChange={(e) => updateAnswer("q7", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Yes</span>
+                    <span>அ) ஆம்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q7" value="No" checked={answers.q7 === "No"} onChange={(e) => updateAnswer("q7", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) No</span>
+                    <span>ஆ) இல்லை</span>
                   </label>
                 </div>
                 {answers.q7 === "No" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If no, please write the reason here."
+                      placeholder="இல்லை என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q7_reason || ""}
@@ -408,12 +408,12 @@ export default function Home() {
                           if (answers.q7_reason && answers.q7_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -425,22 +425,22 @@ export default function Home() {
             {currentStep === 8 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  To foster unity among those who are casteless, one must first identify them. To do this, you need to send the questions I provided to your fellow Christians one by one and survey them. Can you undertake this task, brother?
+                  சாதியற்றவர்களிடையே ஒற்றுமையை வளர்க்க, முதலில் அவர்களை அடையாளம் காண வேண்டும். இதற்கு, நான் வழங்கிய கேள்விகளை உங்கள் சக கிறிஸ்தவர்களுக்கு ஒவ்வொன்றாக அனுப்பி, அவர்களது கருத்துக்களைக் கணக்கெடுக்க வேண்டும். இந்த பணியை நீங்கள் செய்ய முடியுமா, சகோதரரே?
                 </p>
                 <div className="space-y-2 mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q8" value="Yes, I can" checked={answers.q8 === "Yes, I can"} onChange={(e) => updateAnswer("q8", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>a) Yes, I can</span>
+                    <span>அ) ஆம், என்னால் முடியும்</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="q8" value="No, I cannot" checked={answers.q8 === "No, I cannot"} onChange={(e) => updateAnswer("q8", e.target.value)} className="w-4 h-4 text-blue-600" />
-                    <span>b) No, I cannot</span>
+                    <span>ஆ) இல்லை, என்னால் முடியாது</span>
                   </label>
                 </div>
                 {answers.q8 === "No, I cannot" && (
                   <div className="mt-4">
                     <textarea
-                      placeholder="If no, please write the reason here."
+                      placeholder="முடியாது என்றால், அதற்கான காரணத்தை இங்கே எழுதவும்."
                       className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                       rows={4}
                       value={answers.q8_reason || ""}
@@ -452,12 +452,12 @@ export default function Home() {
                           if (answers.q8_reason && answers.q8_reason.trim() !== "") {
                             router.push('/thank-you');
                           } else {
-                            setError("Please provide a reason before submitting.");
+                            setError("சமர்ப்பிப்பதற்கு முன் தயவுசெய்து காரணத்தைக் குறிப்பிடவும்.");
                           }
                         }}
                         className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
                       >
-                        Submit
+                        சமர்ப்பிக்கவும்
                       </button>
                     </div>
                   </div>
@@ -469,7 +469,7 @@ export default function Home() {
             {currentStep === 9 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Click the link below to join our anti-caste group:
+                  சாதி எதிர்ப்பு குழுவில் இணைய கீழே உள்ள இணைப்பைக் கிளிக் செய்யவும்:
                 </p>
                 <a href="https://chat.whatsapp.com/E7uCyiyJ2E6Bwj1fdw8kAI?mode=gi_t" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium break-all">
                   https://chat.whatsapp.com/E7uCyiyJ2E6Bwj1fdw8kAI?mode=gi_t
@@ -481,7 +481,7 @@ export default function Home() {
             {currentStep === 10 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  To rapidly spread the message of casteless brotherhood, why don't you also set this image—"CASTELESS BROTHERHOOD INDIA"—as your profile picture (DP), just as many of us who oppose the caste system have done, brother?
+                  சாதியற்ற சகோதரத்துவத்தின் செய்தியை விரைவாகப் பரப்ப, சாதி அமைப்பை எதிர்க்கும் எங்களில் பலர் செய்தது போல, "சாதியற்ற சகோதரத்துவம் இந்தியா" என்ற இந்த படத்தை நீங்களும் உங்கள் முகப்பு படமாக (DP) ஏன் வைக்கக்கூடாது, சகோதரரே?
                 </p>
                 <div className="flex flex-col md:flex-row gap-4 mt-6 justify-center items-center">
                   <img src="/cbi-logo-1.jpg" alt="Casteless Brotherhood India Kannada" className="w-full max-w-[200px] h-auto rounded-lg shadow-sm border border-slate-200" />
@@ -495,7 +495,7 @@ export default function Home() {
             {currentStep === 11 && (
               <div className="space-y-4">
                 <p className="text-sm md:text-base leading-relaxed text-slate-700">
-                  Brother, are you buying and wearing this shirt? Did you receive it? If you need it, please send your address.
+                  சகோதரரே, இந்த சட்டையை வாங்கி அணிகிறீர்களா? உங்களுக்குக் கிடைத்ததா? தேவைப்பட்டால், உங்கள் முகவரியை அனுப்பி வைக்கவும்.
                 </p>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
                   <img src="/shirt-0.jpg" alt="Yellow and White Shirt" className="w-full h-full object-cover rounded-lg shadow-sm border border-slate-200" />
@@ -506,27 +506,27 @@ export default function Home() {
                 <div className="mt-4 space-y-3">
                   <input
                     type="text"
-                    placeholder="Enter your Name"
+                    placeholder="உங்கள் பெயரை உள்ளிடவும்"
                     className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                     value={answers.name || ""}
                     onChange={(e) => updateAnswer("name", e.target.value)}
                   />
                   <input
                     type="email"
-                    placeholder="Enter your Email"
+                    placeholder="உங்கள் மின்னஞ்சலை உள்ளிடவும்"
                     className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                     value={answers.email || ""}
                     onChange={(e) => updateAnswer("email", e.target.value)}
                   />
                   <input
                     type="tel"
-                    placeholder="Enter your Phone Number"
+                    placeholder="உங்கள் தொலைபேசி எண்ணை உள்ளிடவும்"
                     className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                     value={answers.phone || ""}
                     onChange={(e) => updateAnswer("phone", e.target.value)}
                   />
                   <textarea
-                    placeholder="Enter your Address"
+                    placeholder="உங்கள் முகவரியை உள்ளிடவும்"
                     className="w-full border border-blue-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500"
                     rows={4}
                     value={answers.q11_address || ""}
@@ -560,7 +560,7 @@ export default function Home() {
                 onClick={handlePrevious}
                 className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
               >
-                Previous
+                முந்தையது
               </button>
             )}
             {!((currentStep === 1 && answers.q1 === "Acceptable") || (currentStep === 2 && answers.q2 === "No") || (currentStep === 3 && answers.q3 === "No") || (currentStep === 6 && answers.q6 === "No") || (currentStep === 7 && answers.q7 === "No") || (currentStep === 8 && answers.q8 === "No, I cannot")) && (
@@ -568,7 +568,7 @@ export default function Home() {
                 onClick={handleNext}
                 className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
               >
-                {currentStep === totalSteps ? "Finish" : "Next"}
+                {currentStep === totalSteps ? "முடிக்க" : "அடுத்தது"}
               </button>
             )}
           </div>
