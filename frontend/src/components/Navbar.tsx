@@ -183,14 +183,14 @@ export default function Navbar() {
 
               <div className="px-3 py-2 font-medium border-b border-pink-700 text-pink-200 mt-2">Questions & Answers</div>
               <div className="pl-6 space-y-1">
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Common Questions</Link>
+                <Link href="/common-qa" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Common Questions</Link>
                 <Link href="/caste-denial-qa" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Caste Denial Q & A</Link>
               </div>
 
               <div className="px-3 py-2 font-medium border-b border-pink-700 text-pink-200 mt-2">Services</div>
               <div className="pl-6 space-y-1">
                 <Link href="/services/blood-bank" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Blood Bank</Link>
-                <Link href="#" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Matrimony</Link>
+                <Link href="/services/matrimony" className="block px-3 py-2 text-sm hover:bg-[#ad1457]" onClick={() => setMobileMenuOpen(false)}>Matrimony</Link>
               </div>
 
               <Link href="/support-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium mt-2" onClick={() => setMobileMenuOpen(false)}>Support us</Link>
