@@ -69,9 +69,7 @@ export default function SupportUs() {
           </div>
           <div className="mt-6 pt-6 border-t border-slate-200">
             <p className="font-bold text-slate-900">Google Pay : <span className="text-blue-700 ml-1">9941402590</span></p>
-          </div>
-          <div className="mt-6 pt-6 border-t border-slate-200">
-            <p className="font-bold text-slate-900">Phone Pay : <span className="text-blue-700 ml-1">9941402590</span></p>
+            <p className="font-bold text-slate-900">PhonePe : <span className="text-blue-700 ml-1">9941402590</span></p>
           </div>
         </div>
 
