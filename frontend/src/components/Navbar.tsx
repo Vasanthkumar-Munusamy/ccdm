@@ -78,7 +78,7 @@ export default function Navbar() {
                   )}
                 </svg>
               </button>
-              <span className="font-bold ml-2 xl:hidden">CCDM</span>
+              <span className="font-bold ml-2 xl:hidden notranslate">CCDM</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -139,7 +139,7 @@ export default function Navbar() {
               <Link href="/support-us" className="hover:text-pink-200 transition-colors">Support us</Link>
               <Link href="/contact-us" className="hover:text-pink-200 transition-colors">Contact us</Link>
               <Link href="/articles" className="hover:text-pink-200 transition-colors">Articles</Link>
-              
+
               {user ? (
                 <div className="flex items-center space-x-4 border-l border-[#d81b60] pl-4 ml-2">
                   <span className="text-pink-100 hidden lg:inline">Hi, {user.name}</span>
@@ -196,12 +196,12 @@ export default function Navbar() {
               <Link href="/support-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium mt-2" onClick={() => setMobileMenuOpen(false)}>Support us</Link>
               <Link href="/contact-us" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
               <Link href="/articles" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Articles</Link>
-              
+
               <div className="border-t border-pink-700 mt-2 pt-2">
                 {user ? (
                   <>
                     <div className="px-3 py-2 text-pink-200">Hi, {user.name}</div>
-                    <button 
+                    <button
                       onClick={() => { logout(); setMobileMenuOpen(false); }}
                       className="block w-full text-left px-3 py-2 rounded hover:bg-[#ad1457] font-medium"
                     >
