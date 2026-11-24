@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans, Noto_Sans_Tamil } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import SearchBar from "@/components/SearchBar";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <Navbar />
+          <SearchBar />
           {children}
         </AuthProvider>
       </body>
