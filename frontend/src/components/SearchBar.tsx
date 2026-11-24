@@ -43,7 +43,6 @@ export default function SearchBar() {
   const pathname = usePathname();
 
   const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<SupportedLang>("ta");
@@ -62,7 +61,7 @@ export default function SearchBar() {
   const checkCurrentLang = useCallback(() => {
     if (typeof document === "undefined") return;
 
-    // Check goog-te-combo select element
+    // 1. Check goog-te-combo select element
     const combo = document.querySelector<HTMLSelectElement>(".goog-te-combo");
     if (combo && combo.value) {
       const val = combo.value.toLowerCase() as SupportedLang;
@@ -72,7 +71,7 @@ export default function SearchBar() {
       }
     }
 
-    // Check googtrans cookie: e.g. /ta/en or /auto/en
+    // 2. Check googtrans cookie: e.g. /ta/en or /auto/en
     const match = document.cookie.match(/googtrans=\/[^/]+\/([a-z]{2})/i);
     if (match && match[1]) {
       const val = match[1].toLowerCase() as SupportedLang;
@@ -88,7 +87,7 @@ export default function SearchBar() {
 
   useEffect(() => {
     checkCurrentLang();
-    const interval = setInterval(checkCurrentLang, 600);
+    const interval = setInterval(checkCurrentLang, 500);
     return () => clearInterval(interval);
   }, [checkCurrentLang]);
 
@@ -131,46 +130,53 @@ export default function SearchBar() {
     fetchExtraQuestions();
   }, [isAdmin]);
 
-  // Debounce search query by 250ms
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 250);
+  // Synchronous + debounced search function
+  const runSearch = useCallback(
+    (searchTerm: string, lang: SupportedLang) => {
+      const trimmed = searchTerm.trim();
+      if (!trimmed) {
+        setResults([]);
+        setIsOpen(false);
+        setSelectedIndex(-1);
+        return;
+      }
 
-    return () => clearTimeout(handler);
-  }, [query]);
-
-  // Perform search whenever debounced query or active language changes
-  useEffect(() => {
-    if (!debouncedQuery.trim()) {
-      setResults([]);
+      const matched = searchQuestions(trimmed, lang, liveQuestions);
+      setResults(matched);
+      setIsOpen(true);
       setSelectedIndex(-1);
-      return;
-    }
+    },
+    [liveQuestions]
+  );
 
-    const matched = searchQuestions(debouncedQuery, activeLang, liveQuestions);
-    setResults(matched);
-    setIsOpen(true);
-    setSelectedIndex(-1);
-  }, [debouncedQuery, activeLang, liveQuestions]);
-
-  // Click outside listener to close dropdown
+  // When active language or live questions change, re-run search if query is non-empty
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    if (query.trim()) {
+      runSearch(query, activeLang);
+    }
+  }, [activeLang, liveQuestions, runSearch]);
+
+  // Click / Touch outside listener to close dropdown
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("touchstart", handleOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("touchstart", handleOutside);
+    };
   }, []);
 
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen || results.length === 0) {
       if (e.key === "Enter" && query.trim()) {
-        setIsOpen(true);
+        runSearch(query, activeLang);
       }
       return;
     }
@@ -199,28 +205,37 @@ export default function SearchBar() {
 
   if (isAdmin) return null;
 
-  // Highlight matched substring if present
+  // Safe substring highlighter
   const highlightMatch = (text: string, sub: string) => {
-    if (!sub.trim()) return text;
-    const parts = text.split(new RegExp(`(${sub.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi"));
-    return (
-      <>
-        {parts.map((part, i) =>
-          part.toLowerCase() === sub.toLowerCase() ? (
-            <mark key={i} className="bg-amber-200 text-slate-900 font-semibold rounded px-0.5">
-              {part}
-            </mark>
-          ) : (
-            part
-          )
-        )}
-      </>
-    );
+    if (!text) return "";
+    if (!sub || !sub.trim()) return text;
+    const trimmed = sub.trim();
+    try {
+      const escaped = trimmed.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+      const regex = new RegExp(`(${escaped})`, "gi");
+      const parts = text.split(regex);
+      if (parts.length <= 1) return text;
+      return (
+        <>
+          {parts.map((part, i) =>
+            part.toLowerCase() === trimmed.toLowerCase() ? (
+              <mark key={i} className="bg-amber-200 text-slate-900 font-bold rounded px-0.5">
+                {part}
+              </mark>
+            ) : (
+              part
+            )
+          )}
+        </>
+      );
+    } catch {
+      return text;
+    }
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-[#fce4ec] to-[#f8bbd0] border-b border-pink-200 shadow-sm py-2 px-4 transition-all">
-      <div ref={containerRef} className="max-w-3xl mx-auto relative">
+    <div className="w-full relative z-40 bg-gradient-to-b from-[#fce4ec] to-[#f8bbd0] border-b border-pink-200 shadow-sm py-2.5 px-4">
+      <div ref={containerRef} className="max-w-3xl mx-auto relative z-50">
         {/* Search Input Bar */}
         <div className="relative flex items-center">
           <span className="absolute left-3.5 text-pink-600 pointer-events-none flex items-center">
@@ -245,16 +260,19 @@ export default function SearchBar() {
             type="text"
             value={query}
             onChange={(e) => {
-              setQuery(e.target.value);
-              setIsOpen(true);
+              const val = e.target.value;
+              setQuery(val);
+              runSearch(val, activeLang);
             }}
             onFocus={() => {
-              if (query.trim()) setIsOpen(true);
+              if (query.trim()) {
+                runSearch(query, activeLang);
+              }
             }}
             onKeyDown={handleKeyDown}
             placeholder={PLACEHOLDERS[activeLang] || PLACEHOLDERS.ta}
             aria-label={SEARCH_LABEL[activeLang]}
-            className="w-full pl-11 pr-10 py-2.5 bg-white text-slate-800 placeholder-slate-400 text-sm md:text-base rounded-full border border-pink-300 focus:outline-none focus:ring-2 focus:ring-[#c2185b] focus:border-transparent shadow-inner transition-all"
+            className="w-full pl-11 pr-10 py-2.5 bg-white text-slate-800 placeholder-slate-400 text-sm md:text-base rounded-full border border-pink-300 focus:outline-none focus:ring-2 focus:ring-[#c2185b] focus:border-transparent shadow-sm"
           />
 
           {query && (
@@ -265,14 +283,14 @@ export default function SearchBar() {
                 setIsOpen(false);
                 inputRef.current?.focus();
               }}
-              className="absolute right-3 text-slate-400 hover:text-slate-600 p-1 rounded-full focus:outline-none"
+              className="absolute right-3 text-pink-600 hover:text-pink-800 hover:bg-pink-100 p-1 rounded-full focus:outline-none transition-colors"
               title="Clear search"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -282,7 +300,10 @@ export default function SearchBar() {
 
         {/* Matched Questions Dropdown Rendered Below */}
         {isOpen && query.trim().length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-pink-200 overflow-hidden z-50 max-h-[72vh] flex flex-col animate-in fade-in slide-in-from-top-2 duration-150">
+          <div
+            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-pink-200 overflow-hidden flex flex-col max-h-[75vh]"
+            style={{ zIndex: 9999 }}
+          >
             {/* Header / Matches counter */}
             <div className="bg-[#fdf2f8] px-4 py-2 border-b border-pink-100 flex items-center justify-between text-xs font-semibold text-[#ad1457]">
               <span>
@@ -339,16 +360,16 @@ export default function SearchBar() {
                       </div>
 
                       <div className="text-sm md:text-base font-medium leading-snug">
-                        {highlightMatch(item.displayQuestion, debouncedQuery)}
+                        {highlightMatch(item.displayQuestion, query)}
                       </div>
 
                       {/* If the matched text is in a different language than displayed, show a helpful snippet */}
                       {item.matchedText &&
                         item.matchedText !== item.displayQuestion &&
-                        item.matchedText.toLowerCase().includes(debouncedQuery.toLowerCase()) && (
+                        item.matchedText.toLowerCase().includes(query.toLowerCase().trim()) && (
                           <div className="text-xs text-slate-500 italic flex items-center gap-1">
                             <span>Matched:</span>
-                            <span>{highlightMatch(item.matchedText, debouncedQuery)}</span>
+                            <span>{highlightMatch(item.matchedText, query)}</span>
                           </div>
                         )}
                     </button>
