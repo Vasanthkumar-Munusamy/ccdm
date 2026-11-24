@@ -12,30 +12,48 @@ import { API_BASE_URL } from "@/config/api";
 type SupportedLang = "ta" | "en" | "ml" | "kn" | "te" | "hi";
 
 const PLACEHOLDERS: Record<SupportedLang, string> = {
-  ta: "கேள்விகளைத் தேடுங்கள்... (தமிழ், English, മലയാളം, ಕನ್ನಡ, తెలుగు)",
-  en: "Search questions in English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు...",
-  ml: "ചോദ്യങ്ങൾ തിരയുക... (മലയാളം, English, தமிழ், ಕನ್ನಡ, తెలుగు)",
-  kn: "ಪ್ರಶ್ನೆಗಳನ್ನು ಹುಡುಕಿ... (ಕನ್ನಡ, English, தமிழ், മലയാളം, తెలుగు)",
-  te: "ప్రశ్నలను వెతకండి... (తెలుగు, English, தமிழ், മലയാളം, ಕನ್ನಡ)",
-  hi: "प्रश्न खोजें... (हिंदी, English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు)"
+  ta: "கேள்வி அல்லது பதில்களைத் தேடுங்கள்... (தமிழ், English, മലയാളം, ಕನ್ನಡ, తెలుగు)",
+  en: "Search questions & answers in English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు...",
+  ml: "ചോദ്യോത്തരങ്ങൾ തിരയുക... (മലയാളം, English, தமிழ், ಕನ್ನಡ, తెలుగు)",
+  kn: "ಪ್ರಶ್ನೋತ್ತರಗಳನ್ನು ಹುಡುಕಿ... (ಕನ್ನಡ, English, தமிழ், മലയാളം, తెలుగు)",
+  te: "ప్రశ్నోత్తరాలను వెతకండి... (తెలుగు, English, தமிழ், മലയാളം, ಕನ್ನಡ)",
+  hi: "प्रश्नोत्तरी खोजें... (हिंदी, English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు)"
 };
 
 const NO_RESULTS: Record<SupportedLang, string> = {
-  ta: "பொருத்தமான கேள்விகள் எதுவும் கிடைக்கவில்லை. வேறு சொல்லைப் பயன்படுத்தி முயற்சிக்கவும்.",
-  en: "No questions found matching your search. Try another keyword.",
-  ml: "പൊരുത്തപ്പെടുന്ന ചോദ്യങ്ങളൊന്നും കണ്ടെത്തിയില്ല. മറ്റൊരു വാക്ക് ഉപയോഗിച്ച് ശ്രമിക്കുക.",
-  kn: "ಯಾವುದೇ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಪ್ರಶ್ನೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ಬೇರೆ ಪದವನ್ನು ಬಳಸಿ ಪ್ರಯತ್ನಿಸಿ.",
-  te: "సరిపోలే ప్రశ్నలు ఏవీ కనుగొనబడలేదు. మరొక పదాన్ని ప్రయత్నించండి.",
-  hi: "आपकी खोज से मेल खाता कोई प्रश्न नहीं मिला। कृपया कोई अन्य शब्द खोजें।"
+  ta: "பொருத்தமான கேள்விகள் அல்லது பதில்கள் எதுவும் கிடைக்கவில்லை.",
+  en: "No questions or answers found matching your search.",
+  ml: "പൊരുത്തപ്പെടുന്ന ചോദ്യങ്ങളോ ഉത്തരങ്ങളോ കണ്ടെത്തിയില്ല.",
+  kn: "ಯಾವುದೇ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಉತ್ತರಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+  te: "సరిపోలే ప్రశ్నలు లేదా సమాధానాలు ఏవీ కనుగొనబడలేదు.",
+  hi: "आपकी खोज से मेल खाता कोई प्रश्न या उत्तर नहीं मिला।"
 };
 
 const SEARCH_LABEL: Record<SupportedLang, string> = {
-  ta: "பொதுவான மற்றும் சாதி மறுப்புக் கேள்விகளைத் தேடவும்",
-  en: "Search Common & Caste Denial Questions",
-  ml: "പൊതുവായതും ജാതി നിഷേധവുമായ ചോദ്യങ്ങൾ തിരയുക",
-  kn: "ಸಾಮಾನ್ಯ ಮತ್ತು ಜಾತಿ ನಿರಾಕರಣೆ ಪ್ರಶ್ನೆಗಳನ್ನು ಹುಡುಕಿ",
-  te: "సాధారణ మరియు కుల వ్యతిరేక ప్రశ్నలను వెతకండి",
-  hi: "सामान्य एवं जाति-निषेध प्रश्न खोजें"
+  ta: "பொதுவான மற்றும் சாதி மறுப்புக் கேள்வி-பதில்களைத் தேடவும்",
+  en: "Search Questions & Answers",
+  ml: "ചോദ്യങ്ങളും ഉത്തരങ്ങളും തിരയുക",
+  kn: "ಪ್ರಶ್ನೋತ್ತರಗಳನ್ನು ಹುಡುಕಿ",
+  te: "ప్రశ్నలు మరియు సమాధానాలను వెతకండి",
+  hi: "प्रश्न एवं उत्तर खोजें"
+};
+
+const IN_ANSWER_LABEL: Record<SupportedLang, string> = {
+  ta: "விடையிலிருந்து",
+  en: "In Answer",
+  ml: "ഉത്തരത്തിൽ",
+  kn: "ಉತ್ತರದಲ್ಲಿ",
+  te: "సమాధానంలో",
+  hi: "उत्तर में"
+};
+
+const ANSWER_PREFIX: Record<SupportedLang, string> = {
+  ta: "பதில்:",
+  en: "Answer:",
+  ml: "ഉത്തരം:",
+  kn: "ಉತ್ತರ:",
+  te: "సమాధానం:",
+  hi: "उत्तर:"
 };
 
 export default function SearchBar() {
@@ -48,7 +66,7 @@ export default function SearchBar() {
   const [activeLang, setActiveLang] = useState<SupportedLang>("ta");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [liveQuestions, setLiveQuestions] = useState<
-    { id: number; question: string; type: "common" | "caste-denial" }[]
+    { id: number; question: string; answer?: string; type: "common" | "caste-denial" }[]
   >([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,7 +109,7 @@ export default function SearchBar() {
     return () => clearInterval(interval);
   }, [checkCurrentLang]);
 
-  // Fetch live questions from database once to capture any new admin-added questions
+  // Fetch live questions & answers from database
   useEffect(() => {
     if (isAdmin) return;
     const fetchExtraQuestions = async () => {
@@ -101,13 +119,13 @@ export default function SearchBar() {
           fetch(`${API_BASE_URL}/api/qa`).catch(() => null)
         ]);
 
-        const extras: { id: number; question: string; type: "common" | "caste-denial" }[] = [];
+        const extras: { id: number; question: string; answer?: string; type: "common" | "caste-denial" }[] = [];
 
         if (commonRes && commonRes.ok) {
           const commonData = await commonRes.json();
           if (Array.isArray(commonData)) {
             commonData.forEach((q: any) => {
-              extras.push({ id: q.id, question: q.question, type: "common" });
+              extras.push({ id: q.id, question: q.question, answer: q.answer, type: "common" });
             });
           }
         }
@@ -116,21 +134,21 @@ export default function SearchBar() {
           const casteData = await casteRes.json();
           if (Array.isArray(casteData)) {
             casteData.forEach((q: any) => {
-              extras.push({ id: q.id, question: q.question, type: "caste-denial" });
+              extras.push({ id: q.id, question: q.question, answer: q.answer, type: "caste-denial" });
             });
           }
         }
 
         setLiveQuestions(extras);
       } catch (e) {
-        // Fall back gracefully to precompiled questions
+        // Fall back gracefully
       }
     };
 
     fetchExtraQuestions();
   }, [isAdmin]);
 
-  // Synchronous + debounced search function
+  // Synchronous search across questions and answers
   const runSearch = useCallback(
     (searchTerm: string, lang: SupportedLang) => {
       const trimmed = searchTerm.trim();
@@ -309,7 +327,7 @@ export default function SearchBar() {
               <span>
                 {results.length > 0
                   ? `${results.length} ${
-                      results.length === 1 ? "question matched" : "questions matched"
+                      results.length === 1 ? "match found" : "matches found"
                     }`
                   : "Search Results"}
               </span>
@@ -341,7 +359,7 @@ export default function SearchBar() {
                           : "hover:bg-pink-50/80 text-slate-800"
                       }`}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span
                           className={`text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block ${
                             item.type === "common"
@@ -351,6 +369,12 @@ export default function SearchBar() {
                         >
                           {item.categoryLabel}
                         </span>
+
+                        {item.matchedIn === "answer" && (
+                          <span className="text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">
+                            {IN_ANSWER_LABEL[activeLang] || IN_ANSWER_LABEL.ta}
+                          </span>
+                        )}
 
                         {item.matchedInLang && item.matchedInLang !== activeLang && item.matchedInLang !== "keywords" && (
                           <span className="text-[10px] text-slate-400 font-medium">
@@ -363,7 +387,17 @@ export default function SearchBar() {
                         {highlightMatch(item.displayQuestion, query)}
                       </div>
 
-                      {/* If the matched text is in a different language than displayed, show a helpful snippet */}
+                      {/* If matched inside the answer text, show a snippet with the match highlighted */}
+                      {item.answerSnippet && (
+                        <div className="mt-1 text-xs text-slate-700 bg-amber-50/80 border border-amber-200/80 rounded-md p-2 leading-relaxed font-normal">
+                          <span className="font-semibold text-amber-900 mr-1.5">
+                            {ANSWER_PREFIX[activeLang] || ANSWER_PREFIX.ta}
+                          </span>
+                          <span>{highlightMatch(item.answerSnippet, query)}</span>
+                        </div>
+                      )}
+
+                      {/* If the matched text is from another translation language, show helper */}
                       {item.matchedText &&
                         item.matchedText !== item.displayQuestion &&
                         item.matchedText.toLowerCase().includes(query.toLowerCase().trim()) && (

@@ -1,3 +1,5 @@
+import { staticAnswers } from "@/data/answers";
+
 export interface MultilingualQuestion {
   id: number;
   type: 'common' | 'caste-denial';
@@ -540,46 +542,81 @@ export interface SearchResultItem {
   originalTamilQuestion: string;
   matchedText?: string;
   matchedInLang?: string;
+  matchedIn: 'question' | 'answer';
+  answerSnippet?: string;
 }
 
 export function searchQuestions(
   query: string,
   activeLang: 'ta' | 'en' | 'ml' | 'kn' | 'te' | 'hi',
-  liveExtraQuestions: { id: number; question: string; type: 'common' | 'caste-denial' }[] = []
+  liveQuestions: { id: number; question: string; answer?: string; type: 'common' | 'caste-denial' }[] = []
 ): SearchResultItem[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  const results: SearchResultItem[] = [];
+  // Helper to extract clean answer snippet around match
+  const extractSnippet = (cleanText: string, searchTerm: string): string => {
+    const idx = cleanText.toLowerCase().indexOf(searchTerm.toLowerCase());
+    if (idx === -1) return '';
+    const start = Math.max(0, idx - 35);
+    const end = Math.min(cleanText.length, idx + searchTerm.length + 65);
+    let snippet = cleanText.slice(start, end).trim();
+    if (start > 0) snippet = '...' + snippet;
+    if (end < cleanText.length) snippet = snippet + '...';
+    return snippet;
+  };
+
+  const questionTitleResults: SearchResultItem[] = [];
+  const answerOnlyResults: SearchResultItem[] = [];
+
+  // Map live answers by type and id for quick lookup
+  const liveAnswerMap = new Map<string, string>();
+  for (const lq of liveQuestions) {
+    if (lq.answer) {
+      liveAnswerMap.set(`${lq.type}-${lq.id}`, lq.answer);
+    }
+  }
 
   for (const item of MULTILINGUAL_QUESTIONS) {
     const langList: ('ta' | 'en' | 'ml' | 'kn' | 'te' | 'hi')[] = ['ta', 'en', 'ml', 'kn', 'te', 'hi'];
-    let matched = false;
+    let matchedInQuestion = false;
     let matchedInLang: string | undefined = undefined;
     let matchedText: string | undefined = undefined;
 
-    // Check each language translation for substring match
+    // 1. Check each language translation for substring match in question
     for (const lang of langList) {
       const text = item.translations[lang] || '';
       if (text.toLowerCase().includes(q)) {
-        matched = true;
+        matchedInQuestion = true;
         matchedInLang = lang;
         matchedText = text;
         break;
       }
     }
 
-    // Check phonetic / transliterated keywords if not matched yet
-    if (!matched && item.keywords.toLowerCase().includes(q)) {
-      matched = true;
+    // 2. Check phonetic / transliterated keywords if not matched in question yet
+    if (!matchedInQuestion && item.keywords.toLowerCase().includes(q)) {
+      matchedInQuestion = true;
       matchedInLang = 'keywords';
     }
 
-    if (matched) {
+    // 3. Check answer text (from live database or precompiled staticAnswers)
+    const rawAnswer =
+      liveAnswerMap.get(`${item.type}-${item.id}`) ||
+      (item.type === 'common'
+        ? (staticAnswers.common as Record<string, string>)[String(item.id)]
+        : (staticAnswers.casteDenial as Record<string, string>)[String(item.id)]) ||
+      '';
+
+    const cleanAnswer = rawAnswer.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const matchedInAnswer = cleanAnswer.toLowerCase().includes(q);
+    const answerSnippet = matchedInAnswer ? extractSnippet(cleanAnswer, q) : undefined;
+
+    if (matchedInQuestion || matchedInAnswer) {
       const displayQuestion = item.translations[activeLang] || item.translations.ta;
       const categoryLabel = CATEGORY_LABELS[item.type][activeLang] || CATEGORY_LABELS[item.type].ta;
 
-      results.push({
+      const resultItem: SearchResultItem = {
         id: item.id,
         type: item.type,
         path: item.path,
@@ -587,28 +624,54 @@ export function searchQuestions(
         displayQuestion,
         originalTamilQuestion: item.translations.ta,
         matchedText,
-        matchedInLang
-      });
+        matchedInLang,
+        matchedIn: matchedInQuestion ? 'question' : 'answer',
+        answerSnippet
+      };
+
+      if (matchedInQuestion) {
+        questionTitleResults.push(resultItem);
+      } else {
+        answerOnlyResults.push(resultItem);
+      }
     }
   }
 
-  // Also search newly created questions from the live database if any
-  for (const extra of liveExtraQuestions) {
-    const alreadyExists = results.some(r => r.type === extra.type && r.id === extra.id);
-    if (!alreadyExists && extra.question.toLowerCase().includes(q)) {
-      const categoryLabel = CATEGORY_LABELS[extra.type][activeLang] || CATEGORY_LABELS[extra.type].ta;
-      const path = extra.type === 'common' ? `/common-qa/${extra.id}` : `/caste-denial-qa/${extra.id}`;
+  // 4. Also search any new questions from the live database not in precompiled set
+  for (const extra of liveQuestions) {
+    const alreadyExists =
+      questionTitleResults.some(r => r.type === extra.type && r.id === extra.id) ||
+      answerOnlyResults.some(r => r.type === extra.type && r.id === extra.id);
 
-      results.push({
-        id: extra.id,
-        type: extra.type,
-        path,
-        categoryLabel,
-        displayQuestion: extra.question,
-        originalTamilQuestion: extra.question
-      });
+    if (!alreadyExists) {
+      const qMatched = extra.question.toLowerCase().includes(q);
+      const cleanAns = (extra.answer || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const aMatched = cleanAns.toLowerCase().includes(q);
+
+      if (qMatched || aMatched) {
+        const categoryLabel = CATEGORY_LABELS[extra.type][activeLang] || CATEGORY_LABELS[extra.type].ta;
+        const path = extra.type === 'common' ? `/common-qa/${extra.id}` : `/caste-denial-qa/${extra.id}`;
+
+        const item: SearchResultItem = {
+          id: extra.id,
+          type: extra.type,
+          path,
+          categoryLabel,
+          displayQuestion: extra.question,
+          originalTamilQuestion: extra.question,
+          matchedIn: qMatched ? 'question' : 'answer',
+          answerSnippet: aMatched ? extractSnippet(cleanAns, q) : undefined
+        };
+
+        if (qMatched) {
+          questionTitleResults.push(item);
+        } else {
+          answerOnlyResults.push(item);
+        }
+      }
     }
   }
 
-  return results;
+  // Question title matches appear first, followed by answer text matches
+  return [...questionTitleResults, ...answerOnlyResults];
 }
