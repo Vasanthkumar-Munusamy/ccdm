@@ -536,8 +536,30 @@ export default function Home() {
               </div>
             )}
 
-            {/* WhatsApp Group Button */}
-            <div className="mt-8 flex justify-start">
+          </div>
+
+          {/* Navigation Buttons and Actions */}
+          <div className={`mt-10 flex ${currentStep > 1 ? 'justify-between items-start' : 'justify-end items-start'}`}>
+            {currentStep > 1 && (
+              <button
+                onClick={handlePrevious}
+                className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
+              >
+                முந்தையது
+              </button>
+            )}
+
+            <div className="flex flex-col items-end gap-5">
+              {!((currentStep === 1 && answers.q1 === "Acceptable") || (currentStep === 2 && answers.q2 === "No") || (currentStep === 3 && answers.q3 === "No") || (currentStep === 6 && answers.q6 === "No") || (currentStep === 7 && answers.q7 === "No") || (currentStep === 8 && answers.q8 === "No, I cannot")) && (
+                <button
+                  onClick={handleNext}
+                  className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
+                >
+                  {currentStep === totalSteps ? "முடிக்க" : "அடுத்தது"}
+                </button>
+              )}
+
+              {/* WhatsApp Group Button under the Next button */}
               <a href="https://chat.whatsapp.com/Lwno6Fhv1by54M0wZzCdSv" target="_blank" rel="noopener noreferrer" className="flex items-center group transition-transform transform hover:scale-105">
                 <div className="z-10 bg-white rounded-full p-[2px] shadow-sm flex items-center justify-center h-14 w-14 relative" style={{ marginRight: '-18px' }}>
                   <svg viewBox="0 0 24 24" className="w-12 h-12 text-[#25D366] fill-current">
@@ -550,27 +572,6 @@ export default function Home() {
                 </div>
               </a>
             </div>
-
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className={`mt-10 flex ${currentStep > 1 ? 'justify-between' : 'justify-end'}`}>
-            {currentStep > 1 && (
-              <button
-                onClick={handlePrevious}
-                className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
-              >
-                முந்தையது
-              </button>
-            )}
-            {!((currentStep === 1 && answers.q1 === "Acceptable") || (currentStep === 2 && answers.q2 === "No") || (currentStep === 3 && answers.q3 === "No") || (currentStep === 6 && answers.q6 === "No") || (currentStep === 7 && answers.q7 === "No") || (currentStep === 8 && answers.q8 === "No, I cannot")) && (
-              <button
-                onClick={handleNext}
-                className="bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-2 px-6 rounded transition-colors shadow-sm"
-              >
-                {currentStep === totalSteps ? "முடிக்க" : "அடுத்தது"}
-              </button>
-            )}
           </div>
         </div>
       </div>
