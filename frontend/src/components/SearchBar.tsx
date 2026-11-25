@@ -12,12 +12,12 @@ import { API_BASE_URL } from "@/config/api";
 type SupportedLang = "ta" | "en" | "ml" | "kn" | "te" | "hi";
 
 const PLACEHOLDERS: Record<SupportedLang, string> = {
-  ta: "கேள்வி அல்லது பதில்களைத் தேடுங்கள்... (தமிழ், English, മലയാളം, ಕನ್ನಡ, తెలుగు)",
-  en: "Search questions & answers in English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు...",
-  ml: "ചോദ്യോത്തരങ്ങൾ തിരയുക... (മലയാളം, English, தமிழ், ಕನ್ನಡ, తెలుగు)",
-  kn: "ಪ್ರಶ್ನೋತ್ತರಗಳನ್ನು ಹುಡುಕಿ... (ಕನ್ನಡ, English, தமிழ், മലയാളം, తెలుగు)",
-  te: "ప్రశ్నోత్తరాలను వెతకండి... (తెలుగు, English, தமிழ், മലയാളം, ಕನ್ನಡ)",
-  hi: "प्रश्नोत्तरी खोजें... (हिंदी, English, தமிழ், മലയാളം, ಕನ್ನಡ, తెలుగు)"
+  ta: "தேடுக...",
+  en: "Search...",
+  ml: "തിരയുക...",
+  kn: "ಹುಡುಕಿ...",
+  te: "వెతుకు...",
+  hi: "खोजें..."
 };
 
 const NO_RESULTS: Record<SupportedLang, string> = {
@@ -326,9 +326,8 @@ export default function SearchBar() {
             <div className="bg-[#fdf2f8] px-4 py-2 border-b border-pink-100 flex items-center justify-between text-xs font-semibold text-[#ad1457]">
               <span>
                 {results.length > 0
-                  ? `${results.length} ${
-                      results.length === 1 ? "match found" : "matches found"
-                    }`
+                  ? `${results.length} ${results.length === 1 ? "match found" : "matches found"
+                  }`
                   : "Search Results"}
               </span>
               <span className="text-slate-500 font-normal">
@@ -353,19 +352,17 @@ export default function SearchBar() {
                       key={`${item.type}-${item.id}`}
                       onClick={() => handleSelect(item)}
                       onMouseEnter={() => setSelectedIndex(index)}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex flex-col gap-1.5 focus:outline-none ${
-                        isSelected
-                          ? "bg-pink-100 text-slate-900"
-                          : "hover:bg-pink-50/80 text-slate-800"
-                      }`}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex flex-col gap-1.5 focus:outline-none ${isSelected
+                        ? "bg-pink-100 text-slate-900"
+                        : "hover:bg-pink-50/80 text-slate-800"
+                        }`}
                     >
                       <div className="flex items-center gap-2 flex-wrap">
                         <span
-                          className={`text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block ${
-                            item.type === "common"
-                              ? "bg-purple-100 text-purple-800 border border-purple-200"
-                              : "bg-pink-100 text-[#ad1457] border border-pink-200"
-                          }`}
+                          className={`text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block ${item.type === "common"
+                            ? "bg-purple-100 text-purple-800 border border-purple-200"
+                            : "bg-pink-100 text-[#ad1457] border border-pink-200"
+                            }`}
                         >
                           {item.categoryLabel}
                         </span>
