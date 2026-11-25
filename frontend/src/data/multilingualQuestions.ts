@@ -1,4 +1,5 @@
 import { staticAnswers } from "@/data/answers";
+import { multilingualAnswers } from "@/data/multilingualAnswers";
 
 export interface MultilingualQuestion {
   id: number;
@@ -600,17 +601,62 @@ export function searchQuestions(
       matchedInLang = 'keywords';
     }
 
-    // 3. Check answer text (from live database or precompiled staticAnswers)
-    const rawAnswer =
-      liveAnswerMap.get(`${item.type}-${item.id}`) ||
-      (item.type === 'common'
-        ? (staticAnswers.common as Record<string, string>)[String(item.id)]
-        : (staticAnswers.casteDenial as Record<string, string>)[String(item.id)]) ||
-      '';
+    // 3. Check answer text (multilingual answers database + live answers)
+    let matchedInAnswer = false;
+    let matchedAnswerLang: string | undefined = undefined;
+    let answerSnippet: string | undefined = undefined;
 
-    const cleanAnswer = rawAnswer.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    const matchedInAnswer = cleanAnswer.toLowerCase().includes(q);
-    const answerSnippet = matchedInAnswer ? extractSnippet(cleanAnswer, q) : undefined;
+    // Get the multilingual translations for this question's answer
+    const groupKey = item.type === 'common' ? 'common' : 'casteDenial';
+    const answerTranslations = (multilingualAnswers as any)[groupKey]?.[String(item.id)] || {};
+
+    // Check live answer from database first if present
+    const liveRawAnswer = liveAnswerMap.get(`${item.type}-${item.id}`);
+    if (liveRawAnswer) {
+      const cleanLive = liveRawAnswer.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (cleanLive.toLowerCase().includes(q)) {
+        matchedInAnswer = true;
+        matchedAnswerLang = 'ta';
+        answerSnippet = extractSnippet(cleanLive, q);
+      }
+    }
+
+    // If not matched in live answer, check precompiled multilingual answers
+    if (!matchedInAnswer) {
+      // Prioritize checking user's currently active language first
+      const activeLangAnswer = (answerTranslations[activeLang] || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (activeLangAnswer && activeLangAnswer.toLowerCase().includes(q)) {
+        matchedInAnswer = true;
+        matchedAnswerLang = activeLang;
+        answerSnippet = extractSnippet(activeLangAnswer, q);
+      } else {
+        // Check all other available languages (ta, en, kn, te, ml, hi)
+        for (const lang of langList) {
+          const langAnswer = (answerTranslations[lang] || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+          if (langAnswer && langAnswer.toLowerCase().includes(q)) {
+            matchedInAnswer = true;
+            matchedAnswerLang = lang;
+            answerSnippet = extractSnippet(langAnswer, q);
+            break;
+          }
+        }
+      }
+    }
+
+    // Fallback to staticAnswers (Tamil) if not in multilingual answers
+    if (!matchedInAnswer) {
+      const rawAnswer =
+        (item.type === 'common'
+          ? (staticAnswers.common as Record<string, string>)[String(item.id)]
+          : (staticAnswers.casteDenial as Record<string, string>)[String(item.id)]) ||
+        '';
+      const cleanAnswer = rawAnswer.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (cleanAnswer && cleanAnswer.toLowerCase().includes(q)) {
+        matchedInAnswer = true;
+        matchedAnswerLang = 'ta';
+        answerSnippet = extractSnippet(cleanAnswer, q);
+      }
+    }
 
     if (matchedInQuestion || matchedInAnswer) {
       const displayQuestion = item.translations[activeLang] || item.translations.ta;
@@ -624,7 +670,7 @@ export function searchQuestions(
         displayQuestion,
         originalTamilQuestion: item.translations.ta,
         matchedText,
-        matchedInLang,
+        matchedInLang: matchedInQuestion ? matchedInLang : matchedAnswerLang,
         matchedIn: matchedInQuestion ? 'question' : 'answer',
         answerSnippet
       };
