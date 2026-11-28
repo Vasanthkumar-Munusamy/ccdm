@@ -361,7 +361,8 @@ export default function ArticlesPage() {
                     value={title}
                     onChange={setTitle}
                     placeholder="Enter article title..."
-                    minHeight="90px"
+                    minHeight="60px"
+                    maxHeight="110px"
                   />
                 </div>
 
@@ -441,7 +442,8 @@ export default function ArticlesPage() {
                     value={content}
                     onChange={setContent}
                     placeholder="Write article content here..."
-                    minHeight="220px"
+                    minHeight="320px"
+                    maxHeight="550px"
                   />
                 </div>
 

@@ -125,7 +125,8 @@ export default function CommonQAManager() {
                   value={question}
                   onChange={setQuestion}
                   placeholder="Enter question..."
-                  minHeight="80px"
+                  minHeight="60px"
+                  maxHeight="110px"
                 />
               </div>
               <div>
@@ -134,7 +135,8 @@ export default function CommonQAManager() {
                   value={answer}
                   onChange={setAnswer}
                   placeholder="Enter answer..."
-                  minHeight="180px"
+                  minHeight="300px"
+                  maxHeight="500px"
                 />
               </div>
               <div className="flex gap-2">

@@ -439,8 +439,8 @@ export default function CommonQAAnswer() {
       {/* Admin Inline Edit Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-pink-200 my-8">
-            <div className="bg-gradient-to-r from-[#c2185b] to-[#ad1457] text-white p-5 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden border border-pink-200 my-4">
+            <div className="bg-gradient-to-r from-[#c2185b] to-[#ad1457] text-white p-4 px-6 flex justify-between items-center">
               <h2 className="font-bold text-lg">Edit Question & Answer</h2>
               <button
                 onClick={() => setIsEditModalOpen(false)}
@@ -450,7 +450,7 @@ export default function CommonQAAnswer() {
               </button>
             </div>
 
-            <form onSubmit={handleUpdateQA} className="p-6 flex flex-col gap-4">
+            <form onSubmit={handleUpdateQA} className="p-6 flex flex-col gap-4 overflow-y-auto flex-1">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Question *
@@ -459,7 +459,8 @@ export default function CommonQAAnswer() {
                   value={editQuestion}
                   onChange={setEditQuestion}
                   placeholder="Enter question..."
-                  minHeight="80px"
+                  minHeight="60px"
+                  maxHeight="110px"
                 />
               </div>
 
@@ -471,7 +472,8 @@ export default function CommonQAAnswer() {
                   value={editAnswer}
                   onChange={setEditAnswer}
                   placeholder="Enter full answer explanation..."
-                  minHeight="220px"
+                  minHeight="300px"
+                  maxHeight="500px"
                 />
               </div>
 

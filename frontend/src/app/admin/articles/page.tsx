@@ -6,6 +6,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { API_BASE_URL } from "@/config/api";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -271,9 +272,13 @@ export default function ArticlesManager() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
-                <div className="bg-white text-slate-900 border border-slate-300 rounded">
-                  <ReactQuill theme="snow" value={title} onChange={setTitle} modules={quillModules} />
-                </div>
+                <RichTextEditor
+                  value={title}
+                  onChange={setTitle}
+                  placeholder="Enter article title..."
+                  minHeight="60px"
+                  maxHeight="110px"
+                />
               </div>
               <div className="flex gap-4">
                 <div className="flex-1">
@@ -332,9 +337,13 @@ export default function ArticlesManager() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Content</label>
-                <div className="bg-white text-slate-900 border border-slate-300 rounded pb-12 mb-4">
-                  <ReactQuill theme="snow" value={content} onChange={setContent} modules={quillModules} className="h-64" />
-                </div>
+                <RichTextEditor
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Write article content here..."
+                  minHeight="320px"
+                  maxHeight="550px"
+                />
               </div>
               <div className="flex gap-2 mt-2">
                 <button

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
@@ -60,6 +60,7 @@ interface RichTextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   minHeight?: string;
+  maxHeight?: string;
   className?: string;
 }
 
@@ -67,32 +68,36 @@ export default function RichTextEditor({
   value,
   onChange,
   placeholder,
-  minHeight = "120px",
+  minHeight = "70px",
+  maxHeight = "450px",
   className = "",
 }: RichTextEditorProps) {
+  const reactId = useId();
+  const editorClass = "rte-" + reactId.replace(/[^a-zA-Z0-9_-]/g, "");
+
   return (
     <div
-      className={`rich-text-wrapper bg-white text-slate-900 border border-slate-300 rounded-lg overflow-hidden ${className}`}
+      className={`rich-text-wrapper ${editorClass} bg-white text-slate-900 border border-slate-300 rounded-lg overflow-hidden ${className}`}
     >
       <style jsx global>{`
-        .rich-text-wrapper .ql-toolbar.ql-snow {
+        .${editorClass} .ql-toolbar.ql-snow {
           border: none;
           border-bottom: 1px solid #e2e8f0;
           background: #f8fafc;
-          padding: 6px 8px;
+          padding: 4px 8px;
         }
-        .rich-text-wrapper .ql-container.ql-snow {
+        .${editorClass} .ql-container.ql-snow {
           border: none;
           font-family: inherit;
           font-size: 0.95rem;
         }
-        .rich-text-wrapper .ql-editor {
+        .${editorClass} .ql-editor {
           min-height: ${minHeight};
-          max-height: 380px;
+          max-height: ${maxHeight};
           overflow-y: auto;
           line-height: 1.6;
         }
-        .rich-text-wrapper .ql-editor.ql-blank::before {
+        .${editorClass} .ql-editor.ql-blank::before {
           font-style: normal;
           color: #94a3b8;
         }

@@ -149,7 +149,7 @@ export default function CasteDenialQAList() {
                 onClick={openAddModal}
                 className="flex items-center gap-1.5 bg-[#c2185b] hover:bg-[#ad1457] text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer"
               >
-                <span>➕</span>
+                <span>+</span>
                 <span>Add Question</span>
               </button>
             </div>
@@ -225,8 +225,8 @@ export default function CasteDenialQAList() {
       {/* Admin Add / Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-pink-200 my-8">
-            <div className="bg-gradient-to-r from-[#c2185b] to-[#ad1457] text-white p-5 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden border border-pink-200 my-4">
+            <div className="bg-gradient-to-r from-[#c2185b] to-[#ad1457] text-white p-4 px-6 flex justify-between items-center">
               <h2 className="font-bold text-lg">
                 {editingId ? "Edit Caste Denial Question & Answer" : "Add New Caste Denial Question"}
               </h2>
@@ -238,7 +238,7 @@ export default function CasteDenialQAList() {
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 flex flex-col gap-4">
+            <form onSubmit={handleSave} className="p-6 flex flex-col gap-4 overflow-y-auto flex-1">
               {fetchingDetails && (
                 <div className="text-xs text-amber-700 bg-amber-50 p-2 rounded">
                   Loading answer content...
@@ -253,7 +253,8 @@ export default function CasteDenialQAList() {
                   value={questionInput}
                   onChange={setQuestionInput}
                   placeholder="Enter question..."
-                  minHeight="80px"
+                  minHeight="60px"
+                  maxHeight="110px"
                 />
               </div>
 
@@ -265,7 +266,8 @@ export default function CasteDenialQAList() {
                   value={answerInput}
                   onChange={setAnswerInput}
                   placeholder="Enter full answer explanation..."
-                  minHeight="220px"
+                  minHeight="300px"
+                  maxHeight="500px"
                 />
               </div>
 
