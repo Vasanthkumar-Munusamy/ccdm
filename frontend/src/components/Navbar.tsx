@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Script from "next/script";
 import { useAuth } from "@/context/AuthContext";
+import { useAdmin } from "@/context/AdminContext";
 
 export default function Navbar() {
   const [qaOpen, setQaOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasTranslateBanner, setHasTranslateBanner] = useState(false);
   const { user, logout } = useAuth();
+  const { isAdmin, logoutAdmin, openLoginModal } = useAdmin();
 
   // Fix for Google Translate leaving an empty space at the top when the popup is closed.
   useEffect(() => {
@@ -140,6 +142,32 @@ export default function Navbar() {
               <Link href="/contact-us" className="hover:text-pink-200 transition-colors">Contact us</Link>
               <Link href="/articles" className="hover:text-pink-200 transition-colors">Articles</Link>
 
+              {isAdmin ? (
+                <div className="flex items-center space-x-2 border-l border-[#d81b60] pl-4 ml-2">
+                  <div className="flex items-center gap-1.5 bg-[#880e4f] text-pink-100 text-xs px-2.5 py-1 rounded-full border border-pink-400/40">
+                    <span className="font-semibold">👑 Admin Mode</span>
+                    <button
+                      onClick={logoutAdmin}
+                      className="text-white hover:text-pink-200 underline font-semibold ml-1 cursor-pointer"
+                      title="Exit Admin Mode"
+                    >
+                      Exit
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={openLoginModal}
+                  title="Admin Login"
+                  className="text-pink-300 hover:text-white p-1 rounded-full transition-colors text-xs flex items-center gap-1 opacity-70 hover:opacity-100 cursor-pointer ml-1"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span className="text-[11px] hidden xl:inline">Admin</span>
+                </button>
+              )}
+
               {user ? (
                 <div className="flex items-center space-x-4 border-l border-[#d81b60] pl-4 ml-2">
                   <span className="text-pink-100 hidden lg:inline">Hi, {user.name}</span>
@@ -198,6 +226,24 @@ export default function Navbar() {
               <Link href="/articles" className="block px-3 py-2 rounded hover:bg-[#ad1457] font-medium" onClick={() => setMobileMenuOpen(false)}>Articles</Link>
 
               <div className="border-t border-pink-700 mt-2 pt-2">
+                {isAdmin ? (
+                  <div className="px-3 py-2 flex items-center justify-between bg-[#880e4f] rounded mt-2">
+                    <span className="text-xs font-semibold text-pink-100">👑 Admin Mode Active</span>
+                    <button
+                      onClick={() => { logoutAdmin(); setMobileMenuOpen(false); }}
+                      className="text-xs text-white underline font-semibold"
+                    >
+                      Exit Admin
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { openLoginModal(); setMobileMenuOpen(false); }}
+                    className="block w-full text-left px-3 py-2 rounded hover:bg-[#ad1457] text-xs text-pink-200 mt-2 font-medium"
+                  >
+                    🔐 Admin Login
+                  </button>
+                )}
                 {user ? (
                   <>
                     <div className="px-3 py-2 text-pink-200">Hi, {user.name}</div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/config/api";
+import { useAdmin } from "@/context/AdminContext";
 
 type CommonQA = {
   id: number;
@@ -21,11 +22,18 @@ type Comment = {
 export default function CommonQAAnswer() {
   const { id } = useParams();
   const router = useRouter();
+  const { isAdmin } = useAdmin();
   const [qa, setQa] = useState<CommonQA | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [nextQa, setNextQa] = useState<CommonQA | null>(null);
+
+  // Admin inline edit states
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editQuestion, setEditQuestion] = useState("");
+  const [editAnswer, setEditAnswer] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [newCommentName, setNewCommentName] = useState("");
   const [newCommentContent, setNewCommentContent] = useState("");
@@ -176,14 +184,81 @@ export default function CommonQAAnswer() {
     }
   };
 
+  const handleOpenEdit = () => {
+    if (qa) {
+      setEditQuestion(qa.question);
+      setEditAnswer(qa.answer);
+      setIsEditModalOpen(true);
+    }
+  };
+
+  const handleUpdateQA = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editQuestion.trim() || !editAnswer.trim()) return;
+    setIsUpdating(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/common-qa/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: editQuestion.trim(), answer: editAnswer.trim() }),
+      });
+      if (res.ok) {
+        setQa({ ...qa!, question: editQuestion.trim(), answer: editAnswer.trim() });
+        setIsEditModalOpen(false);
+      } else {
+        alert("Failed to update question.");
+      }
+    } catch (e) {
+      alert("Error updating question.");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteQA = async () => {
+    if (!confirm("Are you sure you want to delete this question?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/common-qa/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        router.push("/common-qa");
+      } else {
+        alert("Failed to delete question.");
+      }
+    } catch (e) {
+      alert("Error deleting question.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-pink-50 font-sans">
 
       <main className="max-w-4xl mx-auto py-12 px-4">
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <Link href="/common-qa" className="text-[#c2185b] hover:text-[#ad1457] font-medium flex items-center gap-1">
             <span>←</span> Back to Questions
           </Link>
+
+          {/* Admin Edit/Delete Bar */}
+          {isAdmin && qa && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleOpenEdit}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1.5 px-3 rounded-lg shadow-sm flex items-center gap-1 cursor-pointer"
+              >
+                <span>✏️</span>
+                <span>Edit Question & Answer</span>
+              </button>
+              <button
+                onClick={handleDeleteQA}
+                className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-1.5 px-3 rounded-lg shadow-sm flex items-center gap-1 cursor-pointer"
+              >
+                <span>🗑️</span>
+                <span>Delete</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="bg-white p-8 rounded-lg shadow-md border-t-4 border-[#c2185b]">
@@ -357,6 +432,67 @@ export default function CommonQAAnswer() {
           </div>
         )}
       </main>
+      {/* Admin Inline Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-pink-200 my-8">
+            <div className="bg-gradient-to-r from-[#c2185b] to-[#ad1457] text-white p-5 flex justify-between items-center">
+              <h2 className="font-bold text-lg">Edit Question & Answer</h2>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="text-pink-100 hover:text-white p-1 rounded-full hover:bg-white/10"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateQA} className="p-6 flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Question *
+                </label>
+                <textarea
+                  required
+                  rows={2}
+                  value={editQuestion}
+                  onChange={(e) => setEditQuestion(e.target.value)}
+                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Answer *
+                </label>
+                <textarea
+                  required
+                  rows={10}
+                  value={editAnswer}
+                  onChange={(e) => setEditAnswer(e.target.value)}
+                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="py-2.5 px-5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="py-2.5 px-6 text-sm font-bold text-white bg-[#c2185b] hover:bg-[#ad1457] rounded-lg transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+                >
+                  {isUpdating ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

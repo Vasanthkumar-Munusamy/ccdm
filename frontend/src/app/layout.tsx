@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "@/context/AuthContext";
+import { AdminProvider } from "@/context/AdminContext";
 
 export default function RootLayout({
   children,
@@ -37,9 +38,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <Navbar />
-          <SearchBar />
-          {children}
+          <AdminProvider>
+            <Navbar />
+            <SearchBar />
+            {children}
+          </AdminProvider>
         </AuthProvider>
       </body>
     </html>
