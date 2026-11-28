@@ -327,9 +327,10 @@ export default function AdminMatrimonyManager() {
                   {previewDetailsProfile.expectation && (
                     <div className="pt-4 border-t border-gray-100">
                       <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Partner Expectations</p>
-                      <p className="text-gray-800 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        {previewDetailsProfile.expectation}
-                      </p>
+                      <div
+                        className="text-gray-800 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100 break-words [&>p:not(:last-child)]:mb-2"
+                        dangerouslySetInnerHTML={{ __html: (previewDetailsProfile.expectation || "").replace(/&nbsp;|\u00A0/g, ' ') }}
+                      />
                     </div>
                   )}
 

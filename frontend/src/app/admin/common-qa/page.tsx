@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/config/api";
+import RichTextEditor from "@/components/RichTextEditor";
 
 type CommonQA = {
   id: number;
@@ -120,22 +121,20 @@ export default function CommonQAManager() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Question</label>
-                <textarea 
-                  value={question} 
-                  onChange={(e) => setQuestion(e.target.value)}
-                  className="w-full border border-slate-300 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-[#c2185b]"
-                  rows={3}
-                  required
+                <RichTextEditor
+                  value={question}
+                  onChange={setQuestion}
+                  placeholder="Enter question..."
+                  minHeight="80px"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Answer</label>
-                <textarea 
-                  value={answer} 
-                  onChange={(e) => setAnswer(e.target.value)}
-                  className="w-full border border-slate-300 rounded px-3 py-2 text-slate-900 focus:outline-none focus:border-[#c2185b]"
-                  rows={8}
-                  required
+                <RichTextEditor
+                  value={answer}
+                  onChange={setAnswer}
+                  placeholder="Enter answer..."
+                  minHeight="180px"
                 />
               </div>
               <div className="flex gap-2">
@@ -176,8 +175,8 @@ export default function CommonQAManager() {
                 {qas.map(qa => (
                   <div key={qa.id} className="border border-slate-200 rounded p-4 flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div className="w-full">
-                      <h3 className="font-bold text-slate-800 mb-2 break-words text-sm sm:text-base">{qa.question}</h3>
-                      <p className="text-slate-600 text-xs sm:text-sm line-clamp-2 break-words">{qa.answer}</p>
+                      <div className="font-bold text-slate-800 mb-2 break-words text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: qa.question.replace(/&nbsp;|\u00A0/g, ' ') }} />
+                      <div className="text-slate-600 text-xs sm:text-sm line-clamp-2 break-words" dangerouslySetInnerHTML={{ __html: qa.answer.replace(/&nbsp;|\u00A0/g, ' ') }} />
                     </div>
                     <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto justify-end border-t border-slate-100 sm:border-0 pt-3 sm:pt-0">
                       <button 

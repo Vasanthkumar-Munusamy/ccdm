@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/config/api";
+import RichTextEditor from "@/components/RichTextEditor";
 
 type Picture = {
   id: number;
@@ -162,12 +163,11 @@ export default function PicturesManager() {
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Picture Title / Caption (Optional)
               </label>
-              <input
-                type="text"
+              <RichTextEditor
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={setTitle}
                 placeholder="e.g. Community meeting, rally event..."
-                className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                minHeight="70px"
               />
             </div>
 
@@ -264,9 +264,10 @@ export default function PicturesManager() {
 
                     <div className="p-3 flex-1 flex flex-col justify-between">
                       {pic.title && (
-                        <p className="text-xs font-semibold text-slate-800 truncate mb-2">
-                          {pic.title}
-                        </p>
+                        <div
+                          className="text-xs font-semibold text-slate-800 truncate mb-2 [&>p]:inline [&>p]:m-0"
+                          dangerouslySetInnerHTML={{ __html: pic.title.replace(/&nbsp;|\u00A0/g, ' ') }}
+                        />
                       )}
                       <button
                         onClick={() => handleDelete(pic.id)}

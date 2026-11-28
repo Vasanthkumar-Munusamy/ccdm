@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API_BASE_URL } from "@/config/api";
 import { useAdmin } from "@/context/AdminContext";
+import RichTextEditor from "@/components/RichTextEditor";
 
 type QA = {
   id: number;
@@ -189,10 +190,9 @@ export default function CasteDenialQAList() {
               >
                 <Link
                   href={`/caste-denial-qa/${qa.id}`}
-                  className="flex-1 text-[#c2185b] hover:text-[#ad1457] hover:underline font-medium text-sm md:text-lg transition-colors leading-snug"
-                  style={{ wordBreak: "break-word" }}
+                  className="flex-1 text-[#c2185b] hover:text-[#ad1457] hover:underline font-medium text-sm md:text-lg transition-colors leading-snug break-words [&>p]:inline [&>p]:m-0"
                 >
-                  {qa.question}
+                  <span dangerouslySetInnerHTML={{ __html: qa.question.replace(/&nbsp;|\u00A0/g, ' ') }} />
                 </Link>
 
                 {/* Admin Inline Action Buttons */}
@@ -249,13 +249,11 @@ export default function CasteDenialQAList() {
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Question *
                 </label>
-                <textarea
-                  required
-                  rows={2}
+                <RichTextEditor
                   value={questionInput}
-                  onChange={(e) => setQuestionInput(e.target.value)}
-                  placeholder="Enter question text..."
-                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                  onChange={setQuestionInput}
+                  placeholder="Enter question..."
+                  minHeight="80px"
                 />
               </div>
 
@@ -263,13 +261,11 @@ export default function CasteDenialQAList() {
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Answer *
                 </label>
-                <textarea
-                  required
-                  rows={8}
+                <RichTextEditor
                   value={answerInput}
-                  onChange={(e) => setAnswerInput(e.target.value)}
+                  onChange={setAnswerInput}
                   placeholder="Enter full answer explanation..."
-                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                  minHeight="220px"
                 />
               </div>
 

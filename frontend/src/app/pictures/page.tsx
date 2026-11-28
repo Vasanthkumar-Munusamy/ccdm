@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "@/config/api";
 import { useAdmin } from "@/context/AdminContext";
+import RichTextEditor from "@/components/RichTextEditor";
 
 type DynamicPicture = {
   id: number;
@@ -219,9 +220,10 @@ export default function PicturesPage() {
                 />
               </div>
               {image.title && (
-                <p className="text-xs font-semibold text-slate-700 text-center truncate pt-2 px-1">
-                  {image.title}
-                </p>
+                <div
+                  className="text-xs font-semibold text-slate-700 text-center truncate pt-2 px-1 [&>p]:inline [&>p]:m-0"
+                  dangerouslySetInnerHTML={{ __html: image.title.replace(/&nbsp;|\u00A0/g, ' ') }}
+                />
               )}
             </div>
           ))}
@@ -273,12 +275,11 @@ export default function PicturesPage() {
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Caption / Title (Optional)
                   </label>
-                  <input
-                    type="text"
+                  <RichTextEditor
                     value={titleInput}
-                    onChange={(e) => setTitleInput(e.target.value)}
-                    placeholder="Enter short picture caption..."
-                    className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                    onChange={setTitleInput}
+                    placeholder="Enter picture caption or title..."
+                    minHeight="70px"
                   />
                 </div>
 

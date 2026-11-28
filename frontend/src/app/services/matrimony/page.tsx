@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import AlertModal from '@/components/AlertModal';
 import { useAuth } from '@/context/AuthContext';
 import { API_BASE_URL } from '@/config/api';
+import RichTextEditor from '@/components/RichTextEditor';
 
 const PdfThumbnail = dynamic(() => import('@/components/PdfThumbnail'), { ssr: false });
 
@@ -567,11 +568,21 @@ export default function MatrimonyPage() {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-700 mb-1">About Yourself</label>
-                    <textarea name="about_yourself" value={formData.about_yourself} onChange={handleInputChange} rows={3} className="w-full border p-2 rounded focus:ring-[#c2185b] bg-white text-gray-900" placeholder="Tell us about yourself..."></textarea>
+                    <RichTextEditor
+                      value={formData.about_yourself}
+                      onChange={(val) => setFormData(prev => ({ ...prev, about_yourself: val }))}
+                      placeholder="Tell us about yourself..."
+                      minHeight="100px"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm text-gray-700 mb-1">Partner Expectations</label>
-                    <textarea name="expectation" value={formData.expectation} onChange={handleInputChange} rows={3} className="w-full border p-2 rounded focus:ring-[#c2185b] bg-white text-gray-900" placeholder="What are you looking for in a partner?"></textarea>
+                    <RichTextEditor
+                      value={formData.expectation}
+                      onChange={(val) => setFormData(prev => ({ ...prev, expectation: val }))}
+                      placeholder="What are you looking for in a partner?"
+                      minHeight="100px"
+                    />
                   </div>
                 </div>
               </form>
@@ -737,13 +748,19 @@ export default function MatrimonyPage() {
                         {previewDetailsProfile.about_yourself && (
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">About</p>
-                            <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{previewDetailsProfile.about_yourself}</p>
+                            <div
+                              className="text-gray-800 leading-relaxed break-words [&>p:not(:last-child)]:mb-2"
+                              dangerouslySetInnerHTML={{ __html: (previewDetailsProfile.about_yourself || "").replace(/&nbsp;|\u00A0/g, ' ') }}
+                            />
                           </div>
                         )}
                         {previewDetailsProfile.expectation && (
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Partner Expectations</p>
-                            <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{previewDetailsProfile.expectation}</p>
+                            <div
+                              className="text-gray-800 leading-relaxed break-words [&>p:not(:last-child)]:mb-2"
+                              dangerouslySetInnerHTML={{ __html: (previewDetailsProfile.expectation || "").replace(/&nbsp;|\u00A0/g, ' ') }}
+                            />
                           </div>
                         )}
                       </div>

@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/config/api";
 import { useAdmin } from "@/context/AdminContext";
+import RichTextEditor from "@/components/RichTextEditor";
 
 type QA = {
   id: number;
@@ -274,12 +275,14 @@ export default function CasteDenialQAAnswer() {
             </div>
           ) : (
             <div>
-              <h1 className="text-lg md:text-2xl font-bold text-slate-800 mb-4 md:mb-6 pb-4 border-b border-slate-200" style={{ wordBreak: 'break-word' }}>
-                {qa.question}
-              </h1>
-              <div className="text-slate-700 whitespace-pre-wrap leading-relaxed text-sm md:text-lg">
-                {qa.answer}
-              </div>
+              <h1
+                className="text-lg md:text-2xl font-bold text-slate-800 mb-4 md:mb-6 pb-4 border-b border-slate-200 leading-relaxed break-words"
+                dangerouslySetInnerHTML={{ __html: qa.question.replace(/&nbsp;|\u00A0/g, ' ') }}
+              />
+              <div
+                className="text-slate-700 leading-relaxed text-sm md:text-lg break-words [&>p:not(:last-child)]:mb-3"
+                dangerouslySetInnerHTML={{ __html: qa.answer.replace(/&nbsp;|\u00A0/g, ' ') }}
+              />
 
               {nextQa && (
                 <div className="mt-10 border-t border-pink-100 pt-6">
@@ -288,9 +291,10 @@ export default function CasteDenialQAAnswer() {
                     className="flex flex-col sm:items-end sm:text-right group"
                   >
                     <span className="text-sm font-semibold text-slate-500 mb-1 group-hover:text-[#c2185b] transition-colors">Next Question →</span>
-                    <span className="text-lg font-medium text-[#c2185b] group-hover:text-[#ad1457] group-hover:underline transition-colors" style={{ wordBreak: 'break-word' }}>
-                      {nextQa.question}
-                    </span>
+                    <span
+                      className="text-lg font-medium text-[#c2185b] group-hover:text-[#ad1457] group-hover:underline transition-colors break-words"
+                      dangerouslySetInnerHTML={{ __html: nextQa.question.replace(/&nbsp;|\u00A0/g, ' ') }}
+                    />
                   </Link>
                 </div>
               )}
@@ -451,12 +455,11 @@ export default function CasteDenialQAAnswer() {
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Question *
                 </label>
-                <textarea
-                  required
-                  rows={2}
+                <RichTextEditor
                   value={editQuestion}
-                  onChange={(e) => setEditQuestion(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                  onChange={setEditQuestion}
+                  placeholder="Enter question..."
+                  minHeight="80px"
                 />
               </div>
 
@@ -464,12 +467,11 @@ export default function CasteDenialQAAnswer() {
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Answer *
                 </label>
-                <textarea
-                  required
-                  rows={10}
+                <RichTextEditor
                   value={editAnswer}
-                  onChange={(e) => setEditAnswer(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c2185b]"
+                  onChange={setEditAnswer}
+                  placeholder="Enter full answer explanation..."
+                  minHeight="220px"
                 />
               </div>
 
